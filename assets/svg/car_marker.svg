@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 130 191" style="enable-background:new 0 0 512 512;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+	.st0{opacity:0.4;fill:#F45C27;}
+	.st1{fill:#F45C27;}
+	.st2{fill:#FFFFFF;}
+	.st3{fill:none;stroke:#FFFFFF;stroke-miterlimit:10;}
+	.st4{fill:#ED4F24;}
+</style>
+  </defs>
+  <ellipse class="st0" cx="64.257" cy="181.405" rx="53.3" ry="8.9" style="fill: rgb(50, 137, 202);"/>
+  <path class="st1" d="M 128.357 71.105 C 128.357 104.205 64.557 169.905 64.557 169.905 C 64.557 169.905 0.757 104.305 0.757 71.105 C 0.757 37.905 29.357 1.405 64.557 1.405 C 99.757 1.405 128.357 37.905 128.357 71.105 Z" style="fill: rgb(50, 137, 202);"/>
+  <g transform="matrix(1, 0, 0, 1, -85.743423, -50.495331)">
+    <path class="st2" d="M126.7,109.4l8.3-15h31.1l8.3,15l5,5.4l-0.4,21.1c0,0-0.2,1.7-1.4,1.9c-1.2,0.2-5.4,0-5.4,0s-1.8,0.3-1.9-2.4   l-39.7-0.3c0,0,0.3,2.9-1.9,2.9c-2.2,0-5.1,0-5.1,0s-2-0.1-2.1-1.9s0-20.9,0-20.9L126.7,109.4z"/>
+    <polygon class="st4" points="129.8,107.6 135.7,96.3 165.1,96.3 171.4,107.6  " style="fill: rgb(50, 137, 202);"/>
+    <polygon class="st4" points="136,122.3 136.8,126.8 163.6,126.8 164.6,122.3  " style="fill: rgb(50, 137, 202);"/>
+    <rect x="136.5" y="128" class="st4" width="27" height="1.4" style="fill: rgb(50, 137, 202);"/>
+    <circle class="st4" cx="128.9" cy="121" r="3.6" style="fill: rgb(50, 137, 202);"/>
+    <circle class="st4" cx="172" cy="121" r="3.6" style="fill: rgb(50, 137, 202);"/>
+    <ellipse class="st2" cx="126" cy="107.3" rx="3.6" ry="3"/>
+    <ellipse class="st2" cx="175.2" cy="107.3" rx="3.6" ry="3"/>
+  </g>
+</svg>

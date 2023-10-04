@@ -1,0 +1,51 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "happiness_club_merchant",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "lib/main/main_developemt.dart",
+            "args": [
+                "--flavor",
+                "development" //development or staging or production
+            ]
+        },
+        {
+            "name": "happiness_club_merchant",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main/main_developemt.dart",
+            "args": [
+                "--flavor",
+                "development" //development or staging or production
+            ]
+        },
+        {
+            "name": "happiness_club_merchant (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/main/main_developemt.dart",
+            "args": [
+                "--flavor",
+                "development" //development or staging or production
+            ]
+        },
+        {
+            "name": "happiness_club_merchant (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/main/main_developemt.dart",
+            "args": [
+                "--flavor",
+                "development" //development or staging or production
+            ]
+        }
+    ]
+}
