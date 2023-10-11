@@ -51,13 +51,9 @@ class _AllBusinessesScreenState extends State<AllBusinessesScreen> {
       child: SafeArea(
         child: Scaffold(
           floatingActionButton: Padding(
-            padding:  EdgeInsets.only(bottom:8.h),
+            padding: EdgeInsets.only(bottom: 8.h),
             child: FloatingActionButton(
               elevation: 2,
-
-
-
-
               onPressed: () async {
                 await context.read<AllBusinessesViewModel>().getAllBusinesses();
               },
@@ -157,397 +153,398 @@ class AllBusinessesScreenContents extends StatelessWidget {
 
     return viewModel.hasBusiness == 0
         ? ManageBusinessScreenContents()
-        : RefreshIndicator(
-            color: kPrimaryColor,
-            onRefresh: () async {
-              await viewModel.getAllBusinesses();
+        : FocusDetector(
+            onFocusGained: () {
+              viewModel.init();
             },
-            child: FocusDetector(
-              onFocusGained: () {
-                viewModel.init();
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: 16.w, right: 16.w),
-                height: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (viewModel.isFetchingNewData) ...[
-                      const Center(
-                        child: CircularProgressIndicator(
-                          color: kPrimaryColor,
-                        ),
+            child: Container(
+              padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              height: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (viewModel.isFetchingNewData) ...[
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: kPrimaryColor,
                       ),
-                    ],
-                    Expanded(
-                      child: viewModel.isLoading
-                          ? const AllBusinessesShimmer()
-                          : viewModel.allBusinesses.isEmpty
-                              ? Text(
-                                  'No business Added'.ntr(),
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                )
-                              : ListView.builder(
-                                  itemCount: viewModel.allBusinesses.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    print(
-                                        "object ${viewModel.allBusinesses[index].businessCoverPath}");
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        await context
-                                            .read<ProductsByBusinessViewModel>()
-                                            .getProducts(viewModel
-                                                .allBusinesses[index].id);
-                                        await context
-                                            .read<OffersByBusinessViewModel>()
-                                            .getOfferByBusiness(
-                                                businessId: viewModel
-                                                    .allBusinesses[index].id);
-                                        viewModel.onTapBusiness(
-                                            viewModel.allBusinesses[index]);
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Stack(children: [
-                                            SizedBox(
-                                              height: 150.h,
-                                              width: double.infinity,
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      fieldBorderRadius,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: viewModel
+                    ),
+                  ],
+                  Expanded(
+                    child: viewModel.isLoading
+                        ? const AllBusinessesShimmer()
+                        : viewModel.allBusinesses.isEmpty
+                            ? Text(
+                                'No business Added'.ntr(),
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              )
+                            : ListView.builder(
+                                itemCount: viewModel.allBusinesses.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  print(
+                                      "object ${viewModel.allBusinesses[index].businessCoverPath}");
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      await context
+                                          .read<ProductsByBusinessViewModel>()
+                                          .getProducts(viewModel
+                                              .allBusinesses[index].id);
+                                      await context
+                                          .read<OffersByBusinessViewModel>()
+                                          .getOfferByBusiness(
+                                              businessId: viewModel
+                                                  .allBusinesses[index].id);
+                                      viewModel.onTapBusiness(
+                                          viewModel.allBusinesses[index]);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Stack(children: [
+                                          SizedBox(
+                                            height: 150.h,
+                                            width: double.infinity,
+                                            child: ClipRRect(
+                                                borderRadius: fieldBorderRadius,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: viewModel
+                                                          .allBusinesses[index]
+                                                          .businessCoverPath ??
+                                                      '',
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Shimmer(
+                                                    color: Theme.of(context)
+                                                        .disabledColor,
+                                                    duration: const Duration(
+                                                        seconds: 2),
+                                                    enabled: true,
+                                                    child: SizedBox(
+                                                      height: 150.h,
+                                                      width: double.infinity,
+                                                    ),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          SizedBox(
+                                                    child: SvgPicture.asset(
+                                                        SvgAssetsPaths.imageSvg,
+                                                        fit: BoxFit.fitWidth),
+                                                  ),
+                                                )),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.all(5.h),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: kDisabledColor),
+                                                borderRadius:
+                                                    fieldBorderRadius),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 150.h - 60.h,
+                                                        left: 10.w),
+                                                    child: Column(children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  kWhiteColor),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      45.r),
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 40.r,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          child: ClipOval(
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl: viewModel
+                                                                  .allBusinesses[
+                                                                      index]
+                                                                  .businessLogoPath,
+                                                              imageBuilder:
+                                                                  (context,
+                                                                          imageProvider) =>
+                                                                      Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image:
+                                                                        imageProvider,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              progressIndicatorBuilder: (context,
+                                                                      url,
+                                                                      downloadProgress) =>
+                                                                  SizedBox(
+                                                                      height:
+                                                                          30.h,
+                                                                      width:
+                                                                          30.h,
+                                                                      child:
+                                                                          Center(
+                                                                        child: CircularProgressIndicator
+                                                                            .adaptive(
+                                                                          value:
+                                                                              downloadProgress.progress,
+                                                                          valueColor:
+                                                                              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                                                        ),
+                                                                      )),
+                                                              errorWidget:
+                                                                  (context, url,
+                                                                          error) =>
+                                                                      SizedBox(
+                                                                height: 100.h,
+                                                                width: 100.h,
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  SvgAssetsPaths
+                                                                      .imageSvg,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.h,
+                                                      ),
+                                                      Text(
+                                                        viewModel
                                                             .allBusinesses[
                                                                 index]
-                                                            .businessCoverPath ??
-                                                        '',
-                                                    imageBuilder: (context,
-                                                            imageProvider) =>
-                                                        Container(
-                                                      decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                            .businessDisplayName,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .displayMedium,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
-                                                    ),
-                                                    progressIndicatorBuilder:
-                                                        (context, url,
-                                                                downloadProgress) =>
-                                                            Shimmer(
-                                                      color: Theme.of(context)
-                                                          .disabledColor,
-                                                      duration: const Duration(
-                                                          seconds: 2),
-                                                      enabled: true,
-                                                      child: SizedBox(
-                                                        height: 150.h,
-                                                        width: double.infinity,
+                                                      SizedBox(
+                                                        height: 10.h,
                                                       ),
-                                                    ),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            SizedBox(
-                                                      child: SvgPicture.asset(
-                                                          SvgAssetsPaths
-                                                              .imageSvg,
-                                                          fit: BoxFit.fitWidth),
-                                                    ),
-                                                  )),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.all(5.h),
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color: kDisabledColor),
-                                                  borderRadius:
-                                                      fieldBorderRadius),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 150.h - 60.h,
-                                                          left: 10.w),
-                                                      child: Column(children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color:
-                                                                    kWhiteColor),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        45.r),
-                                                          ),
-                                                          child: CircleAvatar(
-                                                            radius: 40.r,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            child: ClipOval(
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl: viewModel
-                                                                    .allBusinesses[
-                                                                        index]
-                                                                    .businessLogoPath,
-                                                                imageBuilder:
-                                                                    (context,
-                                                                            imageProvider) =>
-                                                                        Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    image:
-                                                                        DecorationImage(
-                                                                      image:
-                                                                          imageProvider,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                progressIndicatorBuilder: (context,
-                                                                        url,
-                                                                        downloadProgress) =>
-                                                                    SizedBox(
-                                                                        height: 30
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          if (viewModel
+                                                                  .allBusinesses[
+                                                                      index]
+                                                                  .businessStatus ==
+                                                              "pending") ...[
+                                                            Expanded(
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  // Show the custom top Snackbar
+                                                                  showSnackBarMessage(
+                                                                    context:
+                                                                        context,
+                                                                    content:
+                                                                        "Your business is pending approval please wait",
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                        padding:
+                                                                            EdgeInsets.all(8
+                                                                                .h),
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .center,
+                                                                        height: 38
                                                                             .h,
-                                                                        width: 30
-                                                                            .h,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              CircularProgressIndicator.adaptive(
-                                                                            value:
-                                                                                downloadProgress.progress,
-                                                                            valueColor:
-                                                                                AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                                                                          ),
+                                                                        decoration: BoxDecoration(
+                                                                            border:
+                                                                                Border.all(color: kPrimaryColor, width: 1.w),
+                                                                            borderRadius: BorderRadius.all(Radius.circular(6.r))),
+                                                                        child: Image.asset(
+                                                                          PngAssetsPath
+                                                                              .pendingImg,
+                                                                          fit: BoxFit
+                                                                              .fill,
                                                                         )),
-                                                                errorWidget:
-                                                                    (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        SizedBox(
-                                                                  height: 100.h,
-                                                                  width: 100.h,
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    SvgAssetsPaths
-                                                                        .imageSvg,
-                                                                    fit: BoxFit
-                                                                        .fill,
+                                                              ),
+                                                            ),
+                                                          ] else ...[
+                                                            Expanded(
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  await context
+                                                                      .read<
+                                                                          BusinessDetailViewModel>()
+                                                                      .init(viewModel
+                                                                          .allBusinesses[
+                                                                              index]
+                                                                          .id);
+
+                                                                  viewModel.moveToCreateProduct(
+                                                                      viewModel
+                                                                              .allBusinesses[
+                                                                          index]);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  height: 38.h,
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              kPrimaryColor,
+                                                                          width: 1
+                                                                              .w),
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(6.r))),
+                                                                  child: Text(
+                                                                    'Add Product',
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .displaySmall!
+                                                                        .copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.w400),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Text(
-                                                          viewModel
-                                                              .allBusinesses[
-                                                                  index]
-                                                              .businessDisplayName,
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                        Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            if (viewModel
-                                                                    .allBusinesses[
-                                                                        index]
-                                                                    .businessStatus ==
-                                                                "pending") ...[
-                                                              Expanded(
-                                                                child: InkWell(
-                                                                  onTap: () {
-                                                                    // Show the custom top Snackbar
-                                                                    showSnackBarMessage(
-                                                                      context:
-                                                                          context,
-                                                                      content:
-                                                                          "Your business is pending approval please wait",
-                                                                    );
-                                                                  },
-                                                                  child: Container(
-                                                                      padding: EdgeInsets.all(8.h),
-                                                                      alignment: Alignment.center,
-                                                                      height: 38.h,
-                                                                      decoration: BoxDecoration(border: Border.all(color: kPrimaryColor, width: 1.w), borderRadius: BorderRadius.all(Radius.circular(6.r))),
-                                                                      child: Image.asset(
-                                                                        PngAssetsPath
-                                                                            .pendingImg,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
-                                                                ),
-                                                              ),
-                                                            ] else ...[
-                                                              Expanded(
-                                                                child: InkWell(
-                                                                  onTap:
-                                                                      () async {
-                                                                    await context
-                                                                        .read<
-                                                                            BusinessDetailViewModel>()
-                                                                        .init(viewModel
-                                                                            .allBusinesses[index]
-                                                                            .id);
-
-                                                                    viewModel.moveToCreateProduct(
-                                                                        viewModel
-                                                                            .allBusinesses[index]);
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    height:
-                                                                        38.h,
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                            color:
-                                                                                kPrimaryColor,
-                                                                            width: 1
-                                                                                .w),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(6.r))),
-                                                                    child: Text(
-                                                                      'Add Product',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.w400),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5.w,
-                                                              ),
-                                                              Expanded(
-                                                                child: InkWell(
-                                                                  onTap:
-                                                                      () async {
-                                                                    await context
-                                                                        .read<
-                                                                            BusinessDetailViewModel>()
-                                                                        .init(viewModel
-                                                                            .allBusinesses[index]
-                                                                            .id);
-                                                                    viewModel.moveToCreateOffer(
-                                                                        viewModel
-                                                                            .allBusinesses[index]);
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    height:
-                                                                        38.h,
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                            color:
-                                                                                kPrimaryColor,
-                                                                            width: 1
-                                                                                .w),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(6.r))),
-                                                                    child: Text(
-                                                                      'Add Offer',
-                                                                      style: Theme.of(
-                                                                              context)
-                                                                          .textTheme
-                                                                          .displaySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.w400),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
                                                             SizedBox(
-                                                              width: 10.w,
+                                                              width: 5.w,
+                                                            ),
+                                                            Expanded(
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  await context
+                                                                      .read<
+                                                                          BusinessDetailViewModel>()
+                                                                      .init(viewModel
+                                                                          .allBusinesses[
+                                                                              index]
+                                                                          .id);
+                                                                  viewModel.moveToCreateOffer(
+                                                                      viewModel
+                                                                              .allBusinesses[
+                                                                          index]);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  height: 38.h,
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              kPrimaryColor,
+                                                                          width: 1
+                                                                              .w),
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(6.r))),
+                                                                  child: Text(
+                                                                    'Add Offer',
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .displaySmall!
+                                                                        .copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.w400),
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
                                                           ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.h,
-                                                        ),
-                                                      ]),
-                                                    ),
+                                                          SizedBox(
+                                                            width: 10.w,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.h,
+                                                      ),
+                                                    ]),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  provider
-                                                      .getBusinessCoverPicture(
-                                                          viewModel
-                                                              .allBusinesses[
-                                                                  index]
-                                                              .id);
-                                                },
-                                                child: Container(
-                                                  width: 37,
-                                                  height: 37,
-                                                  margin:
-                                                      const EdgeInsets.all(12),
-                                                  padding:
-                                                      const EdgeInsets.all(8),
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          color: Colors.white,
-                                                          shape:
-                                                              BoxShape.circle),
-                                                  child: const Icon(
-                                                    Icons.camera_alt,
-                                                    color: kPrimaryColor,
-                                                    size: 22,
-                                                  ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: InkWell(
+                                              onTap: () {
+                                                provider
+                                                    .getBusinessCoverPicture(
+                                                        viewModel
+                                                            .allBusinesses[
+                                                                index]
+                                                            .id);
+                                              },
+                                              child: Container(
+                                                width: 37,
+                                                height: 37,
+                                                margin:
+                                                    const EdgeInsets.all(12),
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle),
+                                                child: const Icon(
+                                                  Icons.camera_alt,
+                                                  color: kPrimaryColor,
+                                                  size: 22,
                                                 ),
                                               ),
                                             ),
-                                          ]),
-                                          SizedBox(height: 20.h),
-                                        ],
-                                      ),
-                                    );
-                                  }),
-                    ),
-                  ],
-                ),
+                                          ),
+                                        ]),
+                                        SizedBox(height: 20.h),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                  ),
+                ],
               ),
             ),
           );

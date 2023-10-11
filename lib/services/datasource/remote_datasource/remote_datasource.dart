@@ -1,5 +1,7 @@
 import 'package:happiness_club_merchant/services/error/failure.dart';
 import 'package:happiness_club_merchant/src/features/screens/activate_account/usecases/activate_account_verify_otp.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/add_business_product.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/delete_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/products_by_business/usecase/get_all_products.dart';
@@ -335,4 +337,18 @@ abstract class RemoteDataSource {
   /// Output : [bool] returns true if operation is successful
   /// if unsuccessful the response will be [Failure]
   Future<bool> updateOffer(EditsProductOfferParams offerParams);
+
+  /// This method will get businesses contract by business legal Name from server
+  /// Input: [params] contains accessToken and business Legal Name
+  /// Output : [GetBusinessContractResponse] contains Business response
+  /// if unsuccessful the response will be [Failure]
+  Future<GetBusinessContractResponse> getBusinessContract(
+      GetBusinessContractParams params);
+
+  /// This method will get businesses contract download link by business id from server
+  /// Input: [params] contains accessToken and businessId
+  /// Output : [GetBusinessContractDownloadResponse] contains Business response
+  /// if unsuccessful the response will be [Failure]
+  Future<GetBusinessContractDownloadResponse> getBusinessContractDownload(
+      GetBusinessContractDownloadParams params);
 }

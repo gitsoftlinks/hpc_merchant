@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:happiness_club_merchant/src/features/screens/activate_account/usecases/activate_account_verify_otp.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/all_business/usecases/get_all_businesses.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/add_business_product.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/delete_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/products_by_business/usecase/get_all_products.dart';
@@ -123,16 +125,16 @@ class RemoteDataSourceImp extends RemoteDataSource {
     switch (statusCode) {
       case 400:
         if (path == _baseUrl.account.resetPasswordVerifyOtp) {
-          throw BadRequestFailure('password_does_not_match'.ntr());
+          throw BadRequestFailure('password does not match'.ntr());
         }
         if (path == _baseUrl.post.savePost) {
-          throw BadRequestFailure('past_already_saved'.ntr());
+          throw BadRequestFailure('past already saved'.ntr());
         } else if (path == _baseUrl.business.createOrder) {
           throw BadRequestFailure('something went wrong'.ntr());
         } else if (path == _baseUrl.post.createNewPost) {
-          throw BadRequestFailure('bad_request_failure'.ntr());
+          throw BadRequestFailure('bad_ equest failure'.ntr());
         } else if (path == _baseUrl.post.saveSharedPost) {
-          throw AlreadySharedFailure('post_alreadyShared'.ntr());
+          throw AlreadySharedFailure('post alreadyShared'.ntr());
         } else {
           throw BadRequestFailure('invalid username password'.ntr());
         }
@@ -1367,6 +1369,70 @@ class RemoteDataSourceImp extends RemoteDataSource {
       handleResponse(dioError.response!);
     } catch (error) {
       _log.i('[error : deleteBranchLocationAttachments] $error');
+      throw SOMETHING_WENT_WRONG;
+    }
+    throw SOMETHING_WENT_WRONG;
+  }
+
+  @override
+  Future<GetBusinessContractResponse> getBusinessContract(
+      GetBusinessContractParams params) async {
+    var api =
+        'https://hpcstaging.happinessclub.ae/api/contract-content?business_legal_name=${params.businessLegalName}';
+    _dio.options.headers = {
+      'authorization': 'Bearer ${params.accessToken}',
+      'accept': 'application/json',
+    };
+    dp("POST name", params.businessLegalName);
+    try {
+      final response = await _dio.get(api);
+
+      _log.i('[remote data source : getBusinessContract] $response');
+      return GetBusinessContractResponse.fromJson(response.data);
+    } on DioError catch (dioError) {
+      if (dioError.response == null) {
+        throw SOMETHING_WENT_WRONG;
+      }
+      _log.i('[dioError : getBusinessContract] ${dioError.response!}');
+      handleResponse(dioError.response!);
+    } catch (error, s) {
+      //
+
+      dp("[error : getBusinessContract]", s);
+
+      _log.i('[error : getBusinessDetail] $error');
+      throw SOMETHING_WENT_WRONG;
+    }
+    throw SOMETHING_WENT_WRONG;
+  }
+
+  @override
+  Future<GetBusinessContractDownloadResponse> getBusinessContractDownload(
+      GetBusinessContractDownloadParams params) async {
+    var api =
+        'https://hpcstaging.happinessclub.ae/api/contract-download/${params.businessId}';
+    _dio.options.headers = {
+      'authorization': 'Bearer ${params.accessToken}',
+      'accept': 'application/json',
+    };
+    dp("POST id", params.businessId);
+    try {
+      final response = await _dio.get(api);
+
+      _log.i('[remote data source : getBusinessContract] $response');
+      return GetBusinessContractDownloadResponse.fromJson(response.data);
+    } on DioError catch (dioError) {
+      if (dioError.response == null) {
+        throw SOMETHING_WENT_WRONG;
+      }
+      _log.i('[dioError : getBusinessContract] ${dioError.response!}');
+      handleResponse(dioError.response!);
+    } catch (error, s) {
+      //
+
+      dp("[error : getBusinessContract]", s);
+
+      _log.i('[error : getBusinessDetail] $error');
       throw SOMETHING_WENT_WRONG;
     }
     throw SOMETHING_WENT_WRONG;

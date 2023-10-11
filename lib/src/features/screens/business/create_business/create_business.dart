@@ -7,6 +7,8 @@ import 'dart:io';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/business_contract.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/widgets/business_contract_pop_up.dart';
 import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -336,13 +338,11 @@ class _CreateBusinessScreenContentsState
                     SizedBox(
                       height: 20.h,
                     ),
-
                     CustomTextField(
                       inputType: TextInputType.multiline,
                       inputAction: TextInputAction.done,
                       textCapitalization: TextCapitalization.sentences,
-                      textEditingController: viewModel.businessNameController
-                      ,
+                      textEditingController: viewModel.businessNameController,
                       textFieldPadding: EdgeInsets.symmetric(
                           horizontal: 10.w, vertical: 15.h),
                       hintText: 'Business Display Name',
@@ -368,7 +368,6 @@ class _CreateBusinessScreenContentsState
                       },
                       validator: TextFieldValidator.validateText,
                     ),
-
                     SizedBox(
                       height: 20.h,
                     ),
@@ -931,7 +930,14 @@ class _CreateBusinessScreenContentsState
                                     viewModel.branchControllers.last.text
                                         .isNotEmpty) {
                                   FocusScope.of(context).unfocus();
-                                  await viewModel.createNewBusiness();
+
+                                  await viewModel.getBusinessContract();
+                                  Future.delayed(Duration(seconds: 2), () {
+                                    toNext(BusinessContractScreen(
+                                      htmlContent: viewModel.data!,
+                                      params: viewModel.createBusinessParams!,
+                                    ));
+                                  });
                                 } else {
                                   showSnackBarMessage(
                                       context: context,
@@ -1236,5 +1242,52 @@ class _CreateBusinessScreenContentsState
     context.read<SelectLocationViewModel>().afterSaveButtonClick = () => context
         .read<CreateBusinessViewModel>()
         .callSave(branchController, nameController);
+  }
+
+  Widget _buildPopUp(BuildContext context) {
+    return Dialog(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              height: 200,
+              color: Colors.white,
+              child: Center(
+                child: Text('This is a full width pop-up window'),
+              ),
+            ),
+            Container(
+              height: 50,
+              color: Colors.blue,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Cancel'),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Do something
+                        Navigator.pop(context);
+                      },
+                      child: Text('Submit'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

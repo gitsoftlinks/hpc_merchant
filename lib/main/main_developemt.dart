@@ -5,18 +5,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:happiness_club_merchant/app/app.dart';
 import 'package:happiness_club_merchant/app/app_theme/app_theme.dart';
 import 'package:happiness_club_merchant/app/settings/settings_controller.dart';
 import 'package:happiness_club_merchant/app/settings/settings_service.dart';
 import 'package:happiness_club_merchant/utils/constants/app_strings.dart';
-
-import '../firebase_options.dart';
 
 import '../utils/dependency_injection/dependency_injection.dart' as di;
 import '../utils/globals.dart';
@@ -101,7 +99,10 @@ void main() async {
   PackageInfo.fromPlatform().then((value) {
     deviceInfo[BUILD_ID] = "${value.version}+${value.buildNumber}";
   });
-
+  await FlutterDownloader.initialize(
+      debug: true, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: true // option: set to false to disable working with http links (default: false)
+  );
   // runZonedGuarded(() {
   runApp(
     // EasyLocalization(

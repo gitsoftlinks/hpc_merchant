@@ -9,7 +9,8 @@ import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart'
 import 'package:happiness_club_merchant/app/models/select_location_view_model.dart';
 import 'package:happiness_club_merchant/app/providers/account_provider.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/all_business/model/get_all_businesses_view_model.dart';
-import 'package:happiness_club_merchant/src/features/screens/business/create_business/confirm_trade_license_popup.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/widgets/confirm_trade_license_popup.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
 import 'package:happiness_club_merchant/utils/globals.dart';
 import 'package:happiness_club_merchant/utils/router/models/page_action.dart';
@@ -17,19 +18,23 @@ import 'package:happiness_club_merchant/utils/router/models/page_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:html/dom.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../../../app/app_usecase/pick_image_from_gallery.dart';
 import '../../../../../../app/models/places_obj.dart';
 import '../../../../../../services/error/failure.dart';
 import '../../../../../../services/usecases/usecase.dart';
 import '../../../../../../utils/router/app_state.dart';
-import '../../../../../../utils/router/ui_pages.dart';
 import '../../../../home/model/home_view_model.dart';
 import '../../../signin_screen/usecases/send_login.dart';
 import '../../business_detail/usecases/get_business_detail.dart';
 import '../usecases/create_new_business.dart';
 import '../usecases/delete_branch_location.dart';
 import '../usecases/get_business_categories.dart';
+import 'package:html/parser.dart' as htmlparser;
+import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/flutter_html.dart';
 
 class CreateBusinessViewModel extends ChangeNotifier {
   final CreateNewBusiness _createNewBusiness;
@@ -38,19 +43,21 @@ class CreateBusinessViewModel extends ChangeNotifier {
   final AppState _appState;
   final GetBusinessCategories _getBusinessCategories;
   final DeleteBranchLocationAttachments _deleteBranchLocationAttachments;
-
+  final GetBusinessContract _getBusinessContract;
   bool isEdit = false;
 
   CreateBusinessViewModel(
       {required CreateNewBusiness createNewBusiness,
       required PickImageFromGallery pickImageFromGallery,
       required AppState appState,
+      required GetBusinessContract getBusinessContract,
       required DeleteBranchLocationAttachments deleteBranchLocationAttachments,
       required GetCurrentUserDetails getCurrentUserDetails,
       required GetBusinessCategories getBusinessCategories})
       : _createNewBusiness = createNewBusiness,
         _pickImageFromGallery = pickImageFromGallery,
         _appState = appState,
+        _getBusinessContract = getBusinessContract,
         _deleteBranchLocationAttachments = deleteBranchLocationAttachments,
         _getCurrentUserDetails = getCurrentUserDetails,
         _getBusinessCategories = getBusinessCategories;
@@ -109,7 +116,10 @@ class CreateBusinessViewModel extends ChangeNotifier {
   String editCity = '';
   String editBranchName = '';
   String city = '';
+  String? contractContent;
   bool isCanceled = false;
+  Widget? data;
+  CreateNewBusinessParams? createBusinessParams;
   void handleError(Either<Failure, dynamic> either) {
     isLoadingNotifier.value = false;
 
@@ -126,6 +136,68 @@ class CreateBusinessViewModel extends ChangeNotifier {
     businessCategories = await getBusinessCategory();
 
     await editData(businessData);
+  }
+
+  Future<void> getBusinessContract() async {
+    if (logoImage == null) {
+      showSnackBarMessage(
+          context: navigatorKeyGlobal.currentState!.context,
+          content: "Please select Business Logo",
+          backgroundColor: kErrorColor);
+      notifyListeners();
+      return;
+    }
+
+    if (coverImage == null) {
+      showSnackBarMessage(
+          context: navigatorKeyGlobal.currentState!.context,
+          content: "Please select Trade License",
+          backgroundColor: kErrorColor);
+      notifyListeners();
+      return;
+    }
+    isLoadingNotifier.value = true;
+    var params = GetBusinessContractParams(
+        accessToken: '', businessLegalName: businessLegalNameController.text);
+    var getBusinessEither = await _getBusinessContract.call(params);
+    if (getBusinessEither.isLeft()) {
+      handleError(getBusinessEither);
+      return;
+    }
+    var text = getBusinessEither.toOption().toNullable()!.content;
+    ;
+    data = Html(
+      shrinkWrap: true,
+      data: text,
+    );
+
+    print("content : $data");
+    final body = {
+      "city_name": city,
+      "lat": lat,
+      "lng": lng,
+      'branch_name': branchNameController.text
+    };
+    print("object $body");
+    await getBranches();
+    createBusinessParams = CreateNewBusinessParams(
+      trn: trnController.text,
+      licenseNumber: tradeNumberController.text,
+      licenseExpiryDate: tradeExpiryDateController.text,
+      logoImage: logoImage!,
+      tradeLicense: coverImage!,
+      businessDisplayName: businessNameController.text,
+      accessToken: '',
+      businessCategory: categoryId,
+      businessLocation: jsonEncode(body),
+      businessLegalName: businessLegalNameController.text,
+      businessDescription: descriptionController.text,
+      businessBranches: list,
+    );
+    print("Business Params : $createBusinessParams");
+    isLoadingNotifier.value = false;
+    notifyListeners();
+    return;
   }
 
   editData(BusinessDetail? businessData) async {
@@ -160,8 +232,8 @@ class CreateBusinessViewModel extends ChangeNotifier {
       coverImageUrl = businessData.tradeLicensePath;
       branchNameController.text = businessData.branchName;
       categoryId = businessData.businessCategory ?? 0;
-    trnController.text = businessData.trn;
-    tradeNumberController.text = businessData.licenseNumber;
+      trnController.text = businessData.trn;
+      tradeNumberController.text = businessData.licenseNumber;
       tradeExpiryDateController.text =
           DateFormat('yyyy-MM-dd').format(businessData.licenseExpiryDate);
       selectedCategory.value =
@@ -580,49 +652,7 @@ class CreateBusinessViewModel extends ChangeNotifier {
     }
   }
 
-  createNewBusiness() async {
-    if (logoImage == null) {
-      showSnackBarMessage(
-          context: navigatorKeyGlobal.currentState!.context,
-          content: "Please select Business Logo",
-          backgroundColor: kErrorColor);
-      notifyListeners();
-      return;
-    }
-
-    if (coverImage == null) {
-      showSnackBarMessage(
-          context: navigatorKeyGlobal.currentState!.context,
-          content: "Please select Trade License",
-          backgroundColor: kErrorColor);
-      notifyListeners();
-      return;
-    }
-
-    isLoadingNotifier.value = true;
-    final data = {
-      "city_name": city,
-      "lat": lat,
-      "lng": lng,
-      'branch_name': branchNameController.text
-    };
-    print("object $data");
-    await getBranches();
-    var params = CreateNewBusinessParams(
-      trn: trnController.text,
-      licenseNumber: tradeNumberController.text,
-      licenseExpiryDate: tradeExpiryDateController.text,
-      logoImage: logoImage!,
-      tradeLicense: coverImage!,
-      businessDisplayName: businessNameController.text,
-      accessToken: '',
-      businessCategory: categoryId,
-      businessLocation: jsonEncode(data),
-      businessLegalName: businessLegalNameController.text,
-      businessDescription: descriptionController.text,
-      businessBranches: list,
-    );
-
+  createNewBusiness({required CreateNewBusinessParams params}) async {
     var createBusinessEither = await _createNewBusiness.call(params);
 
     if (createBusinessEither.isLeft()) {

@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 // import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
@@ -24,6 +25,10 @@ void main() async {
   sl.registerLazySingleton(() => Logger(filter: ShowAllLogsFilter()));
 
   await EasyLocalization.ensureInitialized();
+  await FlutterDownloader.initialize(
+      debug: false, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: false // option: set to false to disable working with http links (default: false)
+  );
   // await FlutterDownloader.initialize(debug: false);
 
   // Set up the SettingsController, which will glue user settings to multiple

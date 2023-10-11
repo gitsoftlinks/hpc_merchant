@@ -151,9 +151,9 @@ class BusinessDetail extends Equatable {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         categories: Categories.fromJson(json["categories"]),
-        trn: json["trn"],
-        licenseNumber: json['trade_license_number'],
-        licenseExpiryDate: DateTime.parse(json["trade_expiry_date"]),
+        trn: json["trn"] ?? '',
+        licenseNumber: json['trade_license_number'] ?? '',
+        licenseExpiryDate: DateTime.parse(json["trade_expiry_date"] ?? ''),
         businessBranches: List<BusinessBranch>.from(
             json["business_branches"].map((x) => BusinessBranch.fromJson(x))),
       );
@@ -202,9 +202,9 @@ class BusinessDetail extends Equatable {
         businessBranches,
         businessLat,
         businessLng,
-    trn,
-    licenseNumber,
-    licenseExpiryDate
+        trn,
+        licenseNumber,
+        licenseExpiryDate
       ];
   BusinessDetail copyWith(
       {int? id,
@@ -215,9 +215,9 @@ class BusinessDetail extends Equatable {
       String? businessCity,
       String? businessLat,
       String? businessLng,
-        String? trn,
-        String? licenseNumber,
-        DateTime? licenseExpiryDate,
+      String? trn,
+      String? licenseNumber,
+      DateTime? licenseExpiryDate,
       int? businessCategory,
       String? businessLogo,
       String? businessLogoPath,

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:logger/logger.dart';
 import '../app/app.dart';
 import '../app/settings/settings_controller.dart';
@@ -27,6 +28,9 @@ void main() async {
   await dotenv.load(fileName: 'env/.env_prod');
 
   await di.init();
-
+  await FlutterDownloader.initialize(
+      debug: false, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: false // option: set to false to disable working with http links (default: false)
+  );
   runApp(MyApp(settingsController: settingsController));
 }

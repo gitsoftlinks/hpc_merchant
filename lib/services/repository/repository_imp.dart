@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/src/features/screens/offer_by_business/usecases/get_offers_by_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/delete_location_attachment.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/delete_product_attachments.dart';
@@ -1340,6 +1342,50 @@ class RepositoryImp implements Repository {
               accessToken: accessToken, params: params);
       return Right(
           await _remoteDataSource.deleteBranchLocation(paramsWithAccessToken));
+    } on Failure catch (e) {
+      return Left(e);
+    } on DioError catch (_) {
+      return Left(ServerFailure(SOMETHING_WENT_WRONG));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GetBusinessContractResponse>> getBusinessContract(
+      GetBusinessContractParams params) async {
+    if (!await _networkInfo.isConnected) {
+      return Left(NetworkFailure(NO_INTERNET));
+    }
+    try {
+      var accessToken = await getAccessToken();
+      var paramsWithAccessToken = GetBusinessContractParams.withAccessToken(
+          accessToken: accessToken, params: params);
+      return Right(
+          await _remoteDataSource.getBusinessContract(paramsWithAccessToken));
+    } on Failure catch (e) {
+      return Left(e);
+    } on DioError catch (_) {
+      return Left(ServerFailure(SOMETHING_WENT_WRONG));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GetBusinessContractDownloadResponse>>
+      getBusinessContractDownload(
+          GetBusinessContractDownloadParams params) async {
+    if (!await _networkInfo.isConnected) {
+      return Left(NetworkFailure(NO_INTERNET));
+    }
+    try {
+      var accessToken = await getAccessToken();
+      var paramsWithAccessToken =
+          GetBusinessContractDownloadParams.withAccessToken(
+              accessToken: accessToken, params: params);
+      return Right(await _remoteDataSource
+          .getBusinessContractDownload(paramsWithAccessToken));
     } on Failure catch (e) {
       return Left(e);
     } on DioError catch (_) {

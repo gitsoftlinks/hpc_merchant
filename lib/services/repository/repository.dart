@@ -1,5 +1,7 @@
 import 'package:happiness_club_merchant/src/features/screens/activate_account/usecases/activate_account_verify_otp.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/all_business/usecases/get_all_businesses.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/add_business_product.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/delete_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/products_by_business/usecase/get_all_products.dart';
@@ -512,4 +514,18 @@ abstract class Repository {
   /// if unsuccessful the response will be [Failure]
   Future<Either<Failure, bool>> updateOffer(
       EditsProductOfferParams offerParams);
+
+  /// This method will get business contract by business legal name from server
+  /// Input: [params] contains accessToken and business legal name
+  /// Output : [GetBusinessContractResponse] contains offer response
+  /// if unsuccessful the response will be [Failure]
+  Future<Either<Failure, GetBusinessContractResponse>> getBusinessContract(
+      GetBusinessContractParams params);
+
+  /// This method will get business contract download link by business id from server
+  /// Input: [params] contains accessToken and business id
+  /// Output : [GetBusinessContractDownloadResponse] contains offer response
+  /// if unsuccessful the response will be [Failure]
+  Future<Either<Failure, GetBusinessContractDownloadResponse>>
+      getBusinessContractDownload(GetBusinessContractDownloadParams params);
 }

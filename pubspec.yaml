@@ -72,11 +72,11 @@ dependencies:
   logger: ^1.1.0   # For logs instead of using print
   internet_connection_checker: ^1.0.0+1 # For checking internet connection
   cached_network_image: ^3.2.2  # for network image
-  flutter_cache_manager: 3.3.0
+  flutter_cache_manager: ^3.3.1
   # flutter_local_notifications: ^13.0.0  # Local notifications
   shared_preferences: 2.0.17  # for local data storage
-  device_info_plus: ^7.0.0
-  package_info_plus: ^3.0.0
+  device_info_plus: ^9.0.2
+  package_info_plus: ^5.0.0
   flutter_dotenv: ^5.0.2
   google_maps_flutter: ^2.2.2
   # location: ^4.4.0
@@ -88,12 +88,15 @@ dependencies:
   flutter_launcher_icons: ^0.11.0
   custom_image_crop: ^0.0.4
   custom_marker: ^1.0.0
-  syncfusion_flutter_datepicker: ^21.2.3
   flutter_image_compress: ^2.0.4
-  cupertino_date_time_picker: ^0.0.4
   flutter_rounded_date_picker: ^3.0.4
   date_picker_plus: ^1.1.3
   zoom_widget: ^2.0.1
+  flutter_html: ^3.0.0-beta.2
+  syncfusion_flutter_pdfviewer: ^23.1.40
+  flutter_downloader: ^1.11.3
+
+
   # google_sign_in: ^6.0.2
   #firebase_auth: ^4.2.10
   #flutter_facebook_auth: ^5.0.8

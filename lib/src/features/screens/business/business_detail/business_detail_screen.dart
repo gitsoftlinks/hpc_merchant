@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/pdf_view_screen.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/widgets/all_branches_location_pop_up.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/widgets/all_business_location_listing_widget.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/business_detail/widgets/view_trade_license_widget.dart';
@@ -108,7 +109,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         child: SafeArea(
           child: Scaffold(
             floatingActionButton: Padding(
-              padding:  EdgeInsets.only(bottom:8.h),
+              padding: EdgeInsets.only(bottom: 8.h),
               child: FloatingActionButton(
                   elevation: 2,
                   backgroundColor: kPrimaryColor,
@@ -181,37 +182,90 @@ class BusinessDetailScreenContents extends StatelessWidget {
                                   alignment: Alignment.topRight,
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        right: 16.h, bottom: 16.h),
-                                    child: InkResponse(
-                                      onTap: () {
-                                        toNext(TradeLicense(
-                                            path: viewModel.businessDetail
-                                                .tradeLicensePath));
-                                      },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            SvgAssetsPaths.tradeSvg,
-                                            height: 35.h,
+                                        left: 0.54.sw, bottom: 16.h),
+                                    child: Row(
+                                      children: [
+                                        InkResponse(
+                                          onTap: () {
+                                            toNext(TradeLicense(
+                                                path: viewModel.businessDetail
+                                                    .tradeLicensePath));
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                SvgAssetsPaths.tradeSvg,
+                                                height: 25.h,
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Text(
+                                                'Trade license',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium!
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: kPrimaryColor),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 5.h,
+                                        ),
+                                        SizedBox(
+                                          width: 10.w,
+                                        ),
+                                        InkResponse(
+                                          onTap: () async {
+                                            toNext(PdfViewFromNetwork(
+                                              path: viewModel.downloadLinkUrl,
+
+                                            ));
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                alignment: Alignment.center,
+                                                height: 25.h,
+                                                width: 25.h,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                50.r))),
+                                                child: Icon(
+                                                  Icons.edit_document,
+                                                  size: 12.h,
+                                                  color: kBlackColor,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5.h,
+                                              ),
+                                              Text(
+                                                'Contract',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium!
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: kPrimaryColor),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            'Trade license',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium!
-                                                .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: kPrimaryColor),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

@@ -1,12 +1,18 @@
 // ignore_for_file: unused_field
 
-import 'dart:ffi';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:happiness_club_merchant/app/app_theme/app_theme.dart';
 import 'package:happiness_club_merchant/app/app_usecase/pick_image_from_gallery.dart';
+import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart';
 import 'package:happiness_club_merchant/app/providers/account_provider.dart';
-import 'package:happiness_club_merchant/app/providers/cart_provider.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/pdf_view_screen.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
 import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
 import 'package:happiness_club_merchant/utils/globals.dart';
 import 'package:happiness_club_merchant/utils/router/app_state.dart';
@@ -15,7 +21,7 @@ import 'package:happiness_club_merchant/utils/router/ui_pages.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../../../../app/models/places_obj.dart';
 import '../../../../../../services/error/failure.dart';
 import '../../../../../../services/usecases/usecase.dart';
@@ -29,6 +35,7 @@ import '../usecases/get_business_detail.dart';
 import '../../../offer_by_business/usecases/get_offers_by_business.dart';
 
 class BusinessDetailViewModel extends ChangeNotifier {
+  final GetBusinessContractDownload _getBusinessContractDownload;
   final GetBusinessDetail _getBusinessDetail;
   final AddBusinessProduct _addBusinessProduct;
   final PickImageFromGallery _pickImageFromGallery;
@@ -44,6 +51,7 @@ class BusinessDetailViewModel extends ChangeNotifier {
 
   BusinessDetailViewModel(
       {required GetBusinessDetail getBusinessDetail,
+      required GetBusinessContractDownload getBusinessContractDownload,
       required AddBusinessProduct addBusinessProduct,
       required PickImageFromGallery pickImageFromGallery,
       required GetAllOffersByBusiness allOffersByBusiness,
@@ -53,6 +61,7 @@ class BusinessDetailViewModel extends ChangeNotifier {
       required GetBusinessCategories getBusinessCategories})
       : _getBusinessDetail = getBusinessDetail,
         _addBusinessProduct = addBusinessProduct,
+        _getBusinessContractDownload = getBusinessContractDownload,
         _pickImageFromGallery = pickImageFromGallery,
         _getAllProducts = getAllProducts,
         _allOffersByBusiness = allOffersByBusiness,
@@ -100,6 +109,8 @@ class BusinessDetailViewModel extends ChangeNotifier {
   final editBusinessFormKey = GlobalKey<FormState>();
   List<Offer> offersByBusiness = [];
   var businessIdNew;
+  String downloadLinkUrl = '';
+
 
   void handleError(Either<Failure, dynamic> either) {
     isLoading = false;
@@ -117,6 +128,7 @@ class BusinessDetailViewModel extends ChangeNotifier {
     notifyListeners();
     await getBusinessDetails(businessId: businessId);
     await getOfferByBusiness(businessId: businessId);
+    await getBusinessContractDownloadUrl(businessId: businessId);
     await getAddressFromCoordinates();
     await getBranchesAddressFromCoordinates();
     await clearData();
@@ -171,6 +183,8 @@ class BusinessDetailViewModel extends ChangeNotifier {
       return "Error: ${e.toString()}";
     }
   }
+
+
 
   getBranchesAddressFromCoordinates() async {
     var lat;
@@ -229,6 +243,23 @@ class BusinessDetailViewModel extends ChangeNotifier {
     }
     businessDetail = getBusinessEither.toOption().toNullable()!.businessData;
     isLoading = false;
+    notifyListeners();
+    return;
+  }
+
+  Future<void> getBusinessContractDownloadUrl({required int businessId}) async {
+    isLoading2 = true;
+    notifyListeners();
+    var params = GetBusinessContractDownloadParams(
+        accessToken: '', businessId: businessId);
+    var getBusinessEither = await _getBusinessContractDownload.call(params);
+    if (getBusinessEither.isLeft()) {
+      handleError(getBusinessEither);
+      return;
+    }
+    downloadLinkUrl = getBusinessEither.toOption().toNullable()!.path;
+    print("url : $downloadLinkUrl");
+    isLoading2 = false;
     notifyListeners();
     return;
   }

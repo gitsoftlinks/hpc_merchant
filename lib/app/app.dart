@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             create: (context) => CreateBusinessViewModel(
                 getCurrentUserDetails: sl(),
                 deleteBranchLocationAttachments: sl(),
+                getBusinessContract: sl(),
                 appState: sl(),
                 createNewBusiness: sl(),
                 getBusinessCategories: sl(),
@@ -103,6 +104,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ChangeNotifierProvider(
             create: (_) => BusinessDetailViewModel(
                 allOffersByBusiness: sl(),
+                getBusinessContractDownload: sl(),
                 getBusinessDetail: sl(),
                 addBusinessProduct: sl(),
                 pickImageFromGallery: sl(),
@@ -144,6 +146,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             create: (_) => BusinessDetailViewModel(
                 allOffersByBusiness: sl(),
                 appState: sl(),
+                getBusinessContractDownload: sl(),
                 addBusinessProduct: sl(),
                 deleteBusiness: sl(),
                 getAllProducts: sl(),

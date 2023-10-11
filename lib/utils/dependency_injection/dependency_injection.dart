@@ -1,3 +1,5 @@
+import 'package:happiness_club_merchant/src/features/screens/business/business_detail/usecases/get_download_contract_url.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
 import 'package:happiness_club_merchant/src/features/screens/offer_by_business/usecases/get_offers_by_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/delete_product_attachments.dart';
 import 'package:happiness_club_merchant/src/features/screens/create_product/usecases/get_business_locations.dart';
@@ -299,6 +301,7 @@ void registerViewModel() {
 
   sl.registerLazySingleton(() => CreateBusinessViewModel(
       createNewBusiness: sl(),
+      getBusinessContract: sl(),
       getCurrentUserDetails: sl(),
       deleteBranchLocationAttachments: sl(),
       pickImageFromGallery: sl(),
@@ -310,6 +313,7 @@ void registerViewModel() {
   sl.registerLazySingleton(() => BusinessDetailViewModel(
       getBusinessDetail: sl(),
       addBusinessProduct: sl(),
+      getBusinessContractDownload: sl(),
       allOffersByBusiness: sl(),
       pickImageFromGallery: sl(),
       getAllProducts: sl(),
@@ -430,4 +434,6 @@ void registerUseCases() {
   sl.registerLazySingleton(() => DeleteProductOfferAttachments(sl()));
   sl.registerLazySingleton(() => EditProductOffer(sl()));
   sl.registerLazySingleton(() => DeleteBranchLocationAttachments(sl()));
+  sl.registerLazySingleton(() => GetBusinessContract(sl()));
+  sl.registerLazySingleton(() => GetBusinessContractDownload(sl()));
 }
