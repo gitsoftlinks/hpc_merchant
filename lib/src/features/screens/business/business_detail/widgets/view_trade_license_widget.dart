@@ -21,7 +21,7 @@ class TradeLicense extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'trade License',
+          'Trade License',
           style: Theme.of(context).textTheme.displayLarge!.copyWith(
               fontWeight: FontWeight.w600, fontSize: 20.sp, color: canvasColor),
         ),

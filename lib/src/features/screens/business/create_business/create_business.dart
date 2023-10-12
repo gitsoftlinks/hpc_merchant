@@ -49,14 +49,11 @@ class CreateBusinessScreen extends StatelessWidget {
       ],
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              body: CreateBusinessScreenContents(
-                businessData: businessData,
-              ),
+        child: SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: CreateBusinessScreenContents(
+              businessData: businessData,
             ),
           ),
         ),
@@ -105,9 +102,11 @@ class _CreateBusinessScreenContentsState
               backgroundColor: canvasColor,
             ),
           )
-        : Container(
-            padding: EdgeInsets.only(left: 16.w, right: 16.w),
-            height: double.infinity,
+        : Padding(
+            padding: EdgeInsets.only(
+              left: 16.h,
+              right: 16.h,
+            ),
             child: SingleChildScrollView(
               child: Form(
                 key: viewModel.createBusinessFormKey,
@@ -494,6 +493,16 @@ class _CreateBusinessScreenContentsState
                           child: CustomTextField(
                             inputType: TextInputType.text,
                             textCapitalization: TextCapitalization.sentences,
+                            scrollPadding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom +
+                                        1.5.sh),
+                            focusNode: viewModel.branchFocus,
+                            onFieldSubmitted: (val){
+                              setState(() {
+                                viewModel.branchFocus.unfocus();
+                              });
+                            },
                             textEditingController:
                                 viewModel.branchNameController,
                             textFieldPadding: EdgeInsets.symmetric(
@@ -508,7 +517,12 @@ class _CreateBusinessScreenContentsState
                             onChanged: (val) {
                               viewModel.validateTextFieldsNotEmpty();
                             },
-                            onTap: () async {},
+                            onTap: () async {
+                              setState(() {
+                                viewModel.branchFocus.requestFocus();
+                              });
+                            },
+
                             validator: TextFieldValidator.validateText,
                           ),
                         ),
@@ -534,11 +548,11 @@ class _CreateBusinessScreenContentsState
                             },
                             onTap: () async {
                               setState(() {
+                                 viewModel.branchFocus.unfocus();
                                 viewModel.editCity = '';
                                 viewModel.editLat = '';
                                 viewModel.editLng = '';
                               });
-
                               context
                                   .read<SelectLocationViewModel>()
                                   .clearLocation();
@@ -850,12 +864,23 @@ class _CreateBusinessScreenContentsState
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: fields.length,
                             itemBuilder: (context, index) {
-                              return Container(
-                                  margin: EdgeInsets.only(top: 10.h),
-                                  child: fields[index]);
+                              return Column(
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      child: fields[index]),
+                                ],
+                              );
                             },
                           );
                         }),
+                    if (viewModel.subBranchFocus.isNotEmpty) ...[
+                      if (viewModel.subBranchFocus.last.hasFocus) ...[
+                        SizedBox(
+                          height: 120.h,
+                        ),
+                      ],
+                    ],
                     SizedBox(
                       height: 5.h,
                     ),
@@ -895,6 +920,11 @@ class _CreateBusinessScreenContentsState
                         ],
                       ),
                     ),
+                    if (viewModel.branchFocus.hasFocus) ...[
+                      SizedBox(
+                        height: 120.h,
+                      ),
+                    ],
                     SizedBox(
                       height: 20.h,
                     ),
@@ -1069,225 +1099,199 @@ class _CreateBusinessScreenContentsState
   void _addLocationBranch() {
     var branchController = TextEditingController();
     var nameController = TextEditingController();
+    FocusNode focus = FocusNode();
     var field;
-    field = Container(
-      decoration: BoxDecoration(
-          color: Color.fromRGBO(239, 239, 239, 1),
-          borderRadius: BorderRadius.all(Radius.circular(12.r))),
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 10, bottom: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              keyboardType: TextInputType.text,
-              textCapitalization: TextCapitalization.sentences,
-              controller: nameController,
-              style: Theme.of(context).textTheme.displayLarge!.merge(TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  )),
-              decoration: InputDecoration(
-                fillColor: canvasColor,
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(fieldRadius),
-                    borderSide: const BorderSide(color: kBorderColor)),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: inputFieldBorderColor),
-                    borderRadius: BorderRadius.all(fieldRadius)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(fieldRadius),
-                  borderSide:
-                      const BorderSide(color: focusedInputFieldBorderColor),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(fieldRadius),
-                    borderSide:
-                        BorderSide(color: Theme.of(context).colorScheme.error)),
-                suffixIconConstraints: BoxConstraints(maxHeight: 25.h),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(fieldRadius),
-                  borderSide: BorderSide(
-                      width: 1.0, color: Theme.of(context).colorScheme.error),
-                ),
-                errorStyle: TextStyle(
-                  fontSize: 10.sp,
-                  height: 0.9,
-                ),
-                hintText: 'Branch Name'.ntr(),
-                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: Theme.of(context).disabledColor,
-                    ),
-                suffixIcon: Padding(
-                  padding: EdgeInsets.all(3.h),
-                  child: Icon(
-                    Icons.location_on,
-                    color: kPrimaryColor,
-                    size: 24.w,
-                  ),
-                ),
-              ),
-              onChanged: (val) {
-                context.read<CreateBusinessViewModel>()
-                  ..validateTextFieldsNotEmpty();
-              },
-              onTap: () async {},
-              validator: TextFieldValidator.validateText,
-            ),
-          ),
-          SizedBox(
-            width: 15.w,
-          ),
-          Expanded(
-            child: TextFormField(
-              keyboardType: TextInputType.none,
-              textCapitalization: TextCapitalization.sentences,
-              controller: branchController,
-              style: Theme.of(context).textTheme.displayLarge!.merge(TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  )),
-              decoration: InputDecoration(
-                fillColor: canvasColor,
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(fieldRadius),
-                    borderSide: const BorderSide(color: kBorderColor)),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: inputFieldBorderColor),
-                    borderRadius: BorderRadius.all(fieldRadius)),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(fieldRadius),
-                  borderSide:
-                      const BorderSide(color: focusedInputFieldBorderColor),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
+    field = Consumer<CreateBusinessViewModel>(builder: (context, provider, __) {
+      return Container(
+        decoration: BoxDecoration(
+            color: Color.fromRGBO(239, 239, 239, 1),
+            borderRadius: BorderRadius.all(Radius.circular(12.r))),
+        padding:
+            const EdgeInsets.only(left: 12, right: 12, top: 10, bottom: 10),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.sentences,
+                controller: nameController,
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 11.sh),
+                focusNode: focus,
+                style:
+                    Theme.of(context).textTheme.displayLarge!.merge(TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        )),
+                decoration: InputDecoration(
+                  fillColor: canvasColor,
+                  filled: true,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(fieldRadius),
+                      borderSide: const BorderSide(color: kBorderColor)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: inputFieldBorderColor),
+                      borderRadius: BorderRadius.all(fieldRadius)),
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(fieldRadius),
                     borderSide:
-                        BorderSide(color: Theme.of(context).colorScheme.error)),
-                suffixIconConstraints: BoxConstraints(maxHeight: 25.h),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(fieldRadius),
-                  borderSide: BorderSide(
-                      width: 1.0, color: Theme.of(context).colorScheme.error),
-                ),
-                errorStyle: TextStyle(
-                  fontSize: 10.sp,
-                  height: 0.9,
-                ),
-                hintText: 'Location'.ntr(),
-                hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: Theme.of(context).disabledColor,
+                        const BorderSide(color: focusedInputFieldBorderColor),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(fieldRadius),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.error)),
+                  suffixIconConstraints: BoxConstraints(maxHeight: 25.h),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(fieldRadius),
+                    borderSide: BorderSide(
+                        width: 1.0, color: Theme.of(context).colorScheme.error),
+                  ),
+                  errorStyle: TextStyle(
+                    fontSize: 10.sp,
+                    height: 0.9,
+                  ),
+                  hintText: 'Branch Name'.ntr(),
+                  hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).disabledColor,
+                      ),
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.all(3.h),
+                    child: Icon(
+                      Icons.location_on,
+                      color: kPrimaryColor,
+                      size: 24.w,
                     ),
-                suffixIcon: Padding(
-                  padding: EdgeInsets.all(3.h),
-                  child: Icon(
-                    Icons.location_on,
-                    color: kPrimaryColor,
-                    size: 24.w,
                   ),
                 ),
+                onChanged: (val) {
+                  provider.validateTextFieldsNotEmpty();
+                },
+                onTap: () async {
+                  setState(() {
+                    focus.requestFocus();
+                  });
+                },
+                onFieldSubmitted: (val){
+                  setState(() {
+                    focus.unfocus();
+                  });
+                },
+                validator: TextFieldValidator.validateText,
               ),
-              onChanged: (val) {
-                context.read<CreateBusinessViewModel>()
-                  ..validateTextFieldsNotEmpty();
-              },
-              onTap: () async {
-                context.read<CreateBusinessViewModel>().isBranch = true;
-
-                context.read<SelectLocationViewModel>().clearLocation();
-
-                bool alreadyHaveLocation = await context
-                    .read<CreateBusinessViewModel>()
-                    .checkIfAlreadySelectedLocation();
-
-                if (!mounted) return;
-
-                context.read<SelectLocationViewModel>().googleMapCompleter =
-                    Completer();
-
-                context
-                    .read<SelectLocationViewModel>()
-                    .initPermissionAndLocation(
-                        isTappedOnLocation: alreadyHaveLocation);
-
-                var locationBottomSheet = SelectLocationBottomSheet();
-
-                locationBottomSheet.show();
-              },
-              validator: TextFieldValidator.validateText,
             ),
-          ),
-          SizedBox(
-            width: 15.w,
-          ),
-          InkWell(
-            onTap: () {
-              context.read<CreateBusinessViewModel>().removeBranchField(
-                  field: field,
-                  branch: branchController,
-                  branchName: nameController);
-            },
-            child: Icon(
-              Icons.cancel_sharp,
-              color: kBlackColor,
-              size: 15.h,
+            SizedBox(
+              width: 15.w,
             ),
-          )
-        ],
-      ),
-    );
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.none,
+                textCapitalization: TextCapitalization.sentences,
+                controller: branchController,
+                style:
+                    Theme.of(context).textTheme.displayLarge!.merge(TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        )),
+                decoration: InputDecoration(
+                  fillColor: canvasColor,
+                  filled: true,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(fieldRadius),
+                      borderSide: const BorderSide(color: kBorderColor)),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: inputFieldBorderColor),
+                      borderRadius: BorderRadius.all(fieldRadius)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(fieldRadius),
+                    borderSide:
+                        const BorderSide(color: focusedInputFieldBorderColor),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(fieldRadius),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.error)),
+                  suffixIconConstraints: BoxConstraints(maxHeight: 25.h),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(fieldRadius),
+                    borderSide: BorderSide(
+                        width: 1.0, color: Theme.of(context).colorScheme.error),
+                  ),
+                  errorStyle: TextStyle(
+                    fontSize: 10.sp,
+                    height: 0.9,
+                  ),
+                  hintText: 'Location'.ntr(),
+                  hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).disabledColor,
+                      ),
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.all(3.h),
+                    child: Icon(
+                      Icons.location_on,
+                      color: kPrimaryColor,
+                      size: 24.w,
+                    ),
+                  ),
+                ),
+                onChanged: (val) {
+                  provider.validateTextFieldsNotEmpty();
+                },
+                onTap: () async {
+                  focus.unfocus();
+                  provider.isBranch = true;
+
+                  context.read<SelectLocationViewModel>().clearLocation();
+
+                  bool alreadyHaveLocation =
+                      await provider.checkIfAlreadySelectedLocation();
+
+                  if (!mounted) return;
+
+                  context.read<SelectLocationViewModel>().googleMapCompleter =
+                      Completer();
+
+                  context
+                      .read<SelectLocationViewModel>()
+                      .initPermissionAndLocation(
+                          isTappedOnLocation: alreadyHaveLocation);
+
+                  var locationBottomSheet = SelectLocationBottomSheet();
+
+                  locationBottomSheet.show();
+                },
+                validator: TextFieldValidator.validateText,
+              ),
+            ),
+            SizedBox(
+              width: 15.w,
+            ),
+            InkWell(
+              onTap: () {
+                provider.removeBranchField(
+                    field: field,
+                    branch: branchController,
+                    branchName: nameController);
+              },
+              child: Icon(
+                Icons.cancel_sharp,
+                color: kBlackColor,
+                size: 15.h,
+              ),
+            )
+          ],
+        ),
+      );
+    });
     context.read<CreateBusinessViewModel>().addBranchField(
-        field: field, branch: branchController, branchName: nameController);
+        focus: focus,
+        field: field,
+        branch: branchController,
+        branchName: nameController);
     context.read<SelectLocationViewModel>().afterSaveButtonClick = () => context
         .read<CreateBusinessViewModel>()
         .callSave(branchController, nameController);
-  }
-
-  Widget _buildPopUp(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Container(
-              height: 200,
-              color: Colors.white,
-              child: Center(
-                child: Text('This is a full width pop-up window'),
-              ),
-            ),
-            Container(
-              height: 50,
-              color: Colors.blue,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('Cancel'),
-                    ),
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Do something
-                        Navigator.pop(context);
-                      },
-                      child: Text('Submit'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

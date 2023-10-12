@@ -8,6 +8,7 @@ import 'package:happiness_club_merchant/app/app_usecase/get_current_user_details
 import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart';
 import 'package:happiness_club_merchant/app/models/select_location_view_model.dart';
 import 'package:happiness_club_merchant/app/providers/account_provider.dart';
+import 'package:happiness_club_merchant/src/features/screens/business/all_business/all_business_screen.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/all_business/model/get_all_businesses_view_model.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/create_business/widgets/confirm_trade_license_popup.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/create_business/usecases/get_contract_usecase.dart';
@@ -32,8 +33,6 @@ import '../../business_detail/usecases/get_business_detail.dart';
 import '../usecases/create_new_business.dart';
 import '../usecases/delete_branch_location.dart';
 import '../usecases/get_business_categories.dart';
-import 'package:html/parser.dart' as htmlparser;
-import 'package:html/dom.dart' as dom;
 import 'package:flutter_html/flutter_html.dart';
 
 class CreateBusinessViewModel extends ChangeNotifier {
@@ -120,6 +119,8 @@ class CreateBusinessViewModel extends ChangeNotifier {
   bool isCanceled = false;
   Widget? data;
   CreateNewBusinessParams? createBusinessParams;
+  FocusNode branchFocus = FocusNode();
+  List<FocusNode> subBranchFocus = [];
   void handleError(Either<Failure, dynamic> either) {
     isLoadingNotifier.value = false;
 
@@ -280,10 +281,12 @@ class CreateBusinessViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addBranchField({required field, required branch, required branchName}) {
+  void addBranchField(
+      {required field, required branch, required branchName, required focus}) {
     branchControllers.add(branch);
     branchNameControllers.add(branchName);
     branchFields.value.add(field);
+    subBranchFocus.add(focus);
     notifyListeners();
   }
 
@@ -660,11 +663,16 @@ class CreateBusinessViewModel extends ChangeNotifier {
       return;
     }
     await getUserDetails();
-
-    notifyListeners();
+    GetIt.I.get<HomeViewModel>().controller.index = 0;
 
     _appState.currentAction =
-        PageAction(state: PageState.replace, page: AllBusinessesScreenConfig);
+        PageAction(state: PageState.replaceAll, page: HomeScreenConfig);
+    notifyListeners();
+
+    // Navigator.pushReplacement(
+    //     navigatorKeyGlobal.currentContext!,
+    //     MaterialPageRoute(
+    //         builder: (c) => AllBusinessesScreen(comingFromHome: true)));
 
     createBusinessFormKey.currentState?.reset();
 

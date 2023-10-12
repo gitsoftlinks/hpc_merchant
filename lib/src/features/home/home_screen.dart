@@ -73,13 +73,13 @@ class HomeScreenState extends State<HomeScreen> {
               navBarHeight: widget.viewModel.showAppBar ? 55.0.h : 0.h,
               items: _navBarsItems(),
               onItemSelected: (value) {
-                if (value == 0) {
-                  widget.viewModel.scrollController.animateTo(
-                    0,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                }
+                // if (value == 0) {
+                //   widget.viewModel.scrollController.animateTo(
+                //     0,
+                //     duration: Duration(milliseconds: 500),
+                //     curve: Curves.easeInOut,
+                //   );
+                // }
               },
               confineInSafeArea: true,
               handleAndroidBackButtonPress: false,

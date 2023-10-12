@@ -308,7 +308,7 @@ void registerViewModel() {
       appState: sl(),
       getBusinessCategories: sl()));
   sl.registerLazySingleton(
-      () => AllBusinessesViewModel(getAllBusinesses: sl(), appState: sl()));
+      () => AllBusinessesViewModel(getAllBusinesses: sl(), appState: sl(),getCurrentUserDetails: sl()));
 
   sl.registerLazySingleton(() => BusinessDetailViewModel(
       getBusinessDetail: sl(),

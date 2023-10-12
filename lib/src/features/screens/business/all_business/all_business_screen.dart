@@ -1,17 +1,13 @@
 import 'package:dotted_border/dotted_border.dart';
-import 'package:happiness_club_merchant/app/providers/account_provider.dart';
-import 'package:happiness_club_merchant/src/features/screens/business/create_business/create_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/create_business/model/create_business_view_model.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/manage_business.dart';
 import 'package:happiness_club_merchant/src/features/screens/offer_by_business/models/offer_by_business_view_model.dart';
 import 'package:happiness_club_merchant/src/features/screens/products_by_business/models/products_by_business_view_model.dart';
-import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../../../../app/app_asset_path/images_util.dart';
@@ -19,11 +15,8 @@ import '../../../../../app/app_theme/app_theme.dart';
 import '../../../../../app/custom_widgets/custom_snackbar.dart';
 import '../../../../../app/custom_widgets/menu_button.dart';
 import '../../../../../app/toast_messages/toast_messages.dart';
-import '../../../../../utils/globals.dart';
 import '../../../drawer/app_drawer.dart';
-import '../../create_offer/create_offer.dart';
 import '../business_detail/model/business_detail_view_model.dart';
-import '../../create_product/model/create_product_view_model.dart';
 import 'model/get_all_businesses_view_model.dart';
 
 class AllBusinessesScreen extends StatefulWidget {
@@ -46,6 +39,7 @@ class _AllBusinessesScreenState extends State<AllBusinessesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var viewModel = context.watch<AllBusinessesViewModel>();
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -56,6 +50,8 @@ class _AllBusinessesScreenState extends State<AllBusinessesScreen> {
               elevation: 2,
               onPressed: () async {
                 await context.read<AllBusinessesViewModel>().getAllBusinesses();
+                await context.read<AllBusinessesViewModel>().getUserDetails();
+                print('hasBusiness : ${viewModel.hasBusiness}  ${viewModel.user.hasBusiness} ');
               },
               backgroundColor: kPrimaryColor,
               child: Icon(Icons.refresh),
@@ -69,7 +65,7 @@ class _AllBusinessesScreenState extends State<AllBusinessesScreen> {
                 centerTitle: true,
                 title: Padding(
                   padding: EdgeInsets.only(top: 10.h),
-                  child: context.read<AllBusinessesViewModel>().hasBusiness == 0
+                  child: context.read<AllBusinessesViewModel>().user.hasBusiness == 0
                       ? Text('Manage Business',
                           style: Theme.of(context)
                               .textTheme
@@ -108,8 +104,8 @@ class _AllBusinessesScreenState extends State<AllBusinessesScreen> {
                       ),
                 actions: [
                   InkWell(
-                    onTap: () {
-                      context
+                    onTap: ()async {
+                   await   context
                           .read<AllBusinessesViewModel>()
                           .moveToCreateBusiness();
                     },
@@ -151,7 +147,7 @@ class AllBusinessesScreenContents extends StatelessWidget {
     var viewModel = context.watch<AllBusinessesViewModel>();
     var provider = context.read<CreateBusinessViewModel>();
 
-    return viewModel.hasBusiness == 0
+    return viewModel.user.hasBusiness == 0
         ? ManageBusinessScreenContents()
         : FocusDetector(
             onFocusGained: () {
@@ -174,12 +170,7 @@ class AllBusinessesScreenContents extends StatelessWidget {
                   Expanded(
                     child: viewModel.isLoading
                         ? const AllBusinessesShimmer()
-                        : viewModel.allBusinesses.isEmpty
-                            ? Text(
-                                'No business Added'.ntr(),
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              )
-                            : ListView.builder(
+                        :  ListView.builder(
                                 itemCount: viewModel.allBusinesses.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   print(

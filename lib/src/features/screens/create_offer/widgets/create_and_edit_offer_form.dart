@@ -38,6 +38,7 @@ class _CreateAndEditOfferFormState extends State<CreateAndEditOfferForm> {
         CustomTextField(
           inputType: TextInputType.text,
           inputAction: TextInputAction.next,
+          autofocus: true,
           textCapitalization: TextCapitalization.sentences,
           textEditingController: viewModel.nameController,
           textFieldPadding:
@@ -53,6 +54,7 @@ class _CreateAndEditOfferFormState extends State<CreateAndEditOfferForm> {
         CustomTextField(
           inputType: TextInputType.number,
           inputAction: TextInputAction.next,
+          autofocus: true,
           textCapitalization: TextCapitalization.sentences,
           textEditingController: viewModel.discountController,
           textFieldPadding:
@@ -71,6 +73,7 @@ class _CreateAndEditOfferFormState extends State<CreateAndEditOfferForm> {
           inputType: TextInputType.multiline,
           inputAction: TextInputAction.done,
           textCapitalization: TextCapitalization.sentences,
+          autofocus: true,
           textEditingController: viewModel.descriptionController,
           textFieldPadding:
               EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),

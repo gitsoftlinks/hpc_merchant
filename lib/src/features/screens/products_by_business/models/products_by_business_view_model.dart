@@ -2,13 +2,16 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:happiness_club_merchant/src/features/screens/products_by_business/usecase/get_all_products.dart';
 import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
+import '../../../../../app/providers/account_provider.dart';
 import '../../../../../services/error/failure.dart';
 import '../../../../../utils/router/app_state.dart';
 import '../../../../../utils/router/models/page_action.dart';
 import '../../../../../utils/router/models/page_config.dart';
 import '../../../../../utils/router/ui_pages.dart';
+import '../../signin_screen/usecases/send_login.dart';
 
 class ProductsByBusinessViewModel extends ChangeNotifier {
   final GetAllProducts _getAllProducts;
@@ -22,8 +25,8 @@ class ProductsByBusinessViewModel extends ChangeNotifier {
   List<BusinessProduct> products = [];
   ValueChanged<String>? errorMessages;
   ValueChanged<String>? successMessage;
-  bool isLoading = true;
-
+  bool isLoading = false;
+  UserData user = GetIt.I.get<AccountProvider>().user;
   void onTapProduct(int id, List<BusinessProduct> productList) {
     _appState.currentAction = PageAction(
         state: PageState.addPage,

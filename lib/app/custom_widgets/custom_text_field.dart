@@ -29,6 +29,8 @@ class CustomTextField extends StatefulWidget {
   final List<TextInputFormatter>? appInputFormatters;
   final int? textFieldMaxLines;
   final EdgeInsetsGeometry? textFieldPadding;
+  final EdgeInsets? scrollPadding;
+  final void Function(String)? onFieldSubmitted;
 
   CustomTextField(
       {Key? key,
@@ -36,6 +38,8 @@ class CustomTextField extends StatefulWidget {
       required this.hintText,
       required this.validator,
       this.isHidden,
+      this.onFieldSubmitted,
+        this.scrollPadding,
       this.enabled,
       this.onChanged,
       this.onTapSuffix,
@@ -79,6 +83,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           child: TextFormField(
             textAlign: widget._textAlign,
             enabled: widget.enabled,
+              scrollPadding:  widget.scrollPadding ??
+                  EdgeInsets.symmetric(horizontal: 10.w, vertical: 0),
             enableSuggestions: false,
             focusNode: widget.focusNode == null ? null : widget.focusNode!,
             style: Theme.of(context).textTheme.displayLarge!.merge(TextStyle(
@@ -94,7 +100,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.textCapitalization ?? TextCapitalization.none,
             textInputAction: widget.inputAction ?? TextInputAction.done,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: widget.inputType,
+            keyboardType: widget.inputType
+            ,onFieldSubmitted: widget.onFieldSubmitted ,
             inputFormatters: widget.appInputFormatters ??
                 [
                   // FilteringTextInputFormatter.deny(RegExp(r'\s')),

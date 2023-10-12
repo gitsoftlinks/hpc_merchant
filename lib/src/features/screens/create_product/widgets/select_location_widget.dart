@@ -139,6 +139,8 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                               BorderRadius.all(Radius.circular(10.r))),
                       child: Checkbox(
                         value: widget.viewModel.isQuantity,
+
+                        side: BorderSide.none,
                         fillColor: MaterialStatePropertyAll(canvasColor),
                         checkColor: kPrimaryColor,
                         onChanged: (s) {

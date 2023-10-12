@@ -36,16 +36,19 @@ class _OffersByBusinessScreenState extends State<OffersByBusinessScreen> {
   void initState() {
     super.initState();
     scheduleMicrotask(() {
-      if (widget.id != null) {
-        context
-            .read<OffersByBusinessViewModel>()
-            .getOfferByBusiness(businessId: widget.id!);
-        context.read<BusinessDetailViewModel>().init(widget.id);
-      } else {
-        context.read<OffersByBusinessViewModel>().getOfferByBusiness(
-            businessId:
-                context.read<AllBusinessesViewModel>().allBusinesses.first.id);
+      if( context.watch<AllBusinessesViewModel>().user.hasBusiness == 1){
+        if (widget.id != null) {
+          context
+              .read<OffersByBusinessViewModel>()
+              .getOfferByBusiness(businessId: widget.id!);
+          context.read<BusinessDetailViewModel>().init(widget.id);
+        } else {
+          context.read<OffersByBusinessViewModel>().getOfferByBusiness(
+              businessId:
+              context.read<AllBusinessesViewModel>().allBusinesses.first.id);
+        }
       }
+
     });
   }
 
@@ -59,20 +62,23 @@ class _OffersByBusinessScreenState extends State<OffersByBusinessScreen> {
             child: FloatingActionButton(
               elevation: 2,
               onPressed: () async {
-                if (widget.id != null) {
-                  await context
-                      .read<OffersByBusinessViewModel>()
-                      .getOfferByBusiness(businessId: widget.id!);
-                } else {
-                  await context
-                      .read<OffersByBusinessViewModel>()
-                      .getOfferByBusiness(
-                          businessId: context
-                              .read<AllBusinessesViewModel>()
-                              .allBusinesses
-                              .first
-                              .id);
+                if(context.watch<AllBusinessesViewModel>().user.hasBusiness == 1){
+                  if (widget.id != null) {
+                    await context
+                        .read<OffersByBusinessViewModel>()
+                        .getOfferByBusiness(businessId: widget.id!);
+                  } else {
+                    await context
+                        .read<OffersByBusinessViewModel>()
+                        .getOfferByBusiness(
+                        businessId: context
+                            .read<AllBusinessesViewModel>()
+                            .allBusinesses
+                            .first
+                            .id);
+                  }
                 }
+
               },
               backgroundColor: kPrimaryColor,
               child: Icon(Icons.refresh),
@@ -155,35 +161,40 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                       ),
                       InkResponse(
                         onTap: () async {
-                          if (id == null) {
-                            if (allBusinesses
-                                    .allBusinesses.first.businessStatus ==
-                                'pending') {
-                              showSnackBarMessage(
-                                  context: context,
-                                  content:
-                                      "Can't add offers until business has been approved",
-                                  backgroundColor: kErrorColor);
+                          if(allBusinesses.user.hasBusiness == 0){
+                            showSnackBarMessage(context: context, content: 'Please add business to continue');
+                          }else{
+                            if (id == null) {
+                              if (allBusinesses
+                                  .allBusinesses.first.businessStatus ==
+                                  'pending') {
+                                showSnackBarMessage(
+                                    context: context,
+                                    content:
+                                    "Can't add offers until business has been approved",
+                                    backgroundColor: kErrorColor);
+                              } else {
+                                await viewModel.getOfferByBusiness(
+                                    businessId:
+                                    allBusinesses.allBusinesses.first.id);
+                                viewModel.moveToCreateOffer();
+                              }
                             } else {
-                              await viewModel.getOfferByBusiness(
-                                  businessId:
-                                      allBusinesses.allBusinesses.first.id);
-                              viewModel.moveToCreateOffer();
-                            }
-                          } else {
-                            if (businessDetail.businessDetail.businessStatus ==
-                                'pending') {
-                              showSnackBarMessage(
-                                  context: context,
-                                  content:
-                                      "Can't add offers until business has been approved",
-                                  backgroundColor: kErrorColor);
-                            } else {
-                              await viewModel.getOfferByBusiness(
-                                  businessId: id!);
-                              viewModel.moveToCreateOffer();
+                              if (businessDetail.businessDetail.businessStatus ==
+                                  'pending') {
+                                showSnackBarMessage(
+                                    context: context,
+                                    content:
+                                    "Can't add offers until business has been approved",
+                                    backgroundColor: kErrorColor);
+                              } else {
+                                await viewModel.getOfferByBusiness(
+                                    businessId: id!);
+                                viewModel.moveToCreateOffer();
+                              }
                             }
                           }
+
                         },
                         child: SvgPicture.asset(
                           SvgAssetsPaths.addIconSvg,
@@ -194,6 +205,7 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                   SizedBox(
                     height: 20.h,
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -206,16 +218,177 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.w600),
                       ),
                       Spacer(),
-                      if (id != null) ...[
+                      if(allBusinesses.user.hasBusiness == 1) ...[
+                        if (id != null) ...[
+                          Expanded(
+                            child: Text(
+                              businessDetail.businessDetail.businessDisplayName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13.sp),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(50.r)),
+                                border: Border.all(
+                                    color: kDisabledColor, width: 1.w)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.r),
+                              ),
+                              child: SizedBox(
+                                height: 36.h,
+                                width: 36.h,
+                                child: CachedNetworkImage(
+                                  imageUrl: businessDetail
+                                      .businessDetail.businessLogoPath,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) => Shimmer(
+                                    color: Theme.of(context).disabledColor,
+                                    duration: const Duration(seconds: 2),
+                                    enabled: true,
+                                    child: SizedBox(
+                                      height: 36.h,
+                                      width: 36.h,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => SizedBox(
+                                    child: SvgPicture.asset(
+                                      SvgAssetsPaths.imageSvg,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          InkResponse(
+                            onTap: () {
+                              var bottomSheet = SelectBusinessBottomSheet(
+                                  fromProduct: false,
+                                  viewModel: allBusinesses,
+                                  provider: context
+                                      .read<ProductsByBusinessViewModel>());
+                              bottomSheet.show();
+                            },
+                            child: Icon(
+                              Icons.arrow_drop_down,
+                              color: kPrimaryColor,
+                            ),
+                          )
+                        ] else ...[
+                          Expanded(
+                            child: Text(
+                              allBusinesses
+                                  .allBusinesses.first.businessDisplayName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(50.r)),
+                                border: Border.all(
+                                    color: kDisabledColor, width: 1.w)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(50.r),
+                              ),
+                              child: SizedBox(
+                                height: 36.h,
+                                width: 36.h,
+                                child: CachedNetworkImage(
+                                  imageUrl: allBusinesses
+                                      .allBusinesses.first.businessLogoPath,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) => Shimmer(
+                                    color: Theme.of(context).disabledColor,
+                                    duration: const Duration(seconds: 2),
+                                    enabled: true,
+                                    child: SizedBox(
+                                      height: 36.h,
+                                      width: 36.h,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => SizedBox(
+                                    child: SvgPicture.asset(
+                                      SvgAssetsPaths.imageSvg,
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          InkResponse(
+                            onTap: () {
+                              var bottomSheet = SelectBusinessBottomSheet(
+                                  fromProduct: false,
+                                  viewModel: allBusinesses,
+                                  provider: context
+                                      .read<ProductsByBusinessViewModel>());
+                              bottomSheet.show();
+                            },
+                            child: Icon(
+                              Icons.arrow_drop_down,
+                              color: kPrimaryColor,
+                            ),
+                          )
+                        ],
+                      ] else ...[
                         Expanded(
                           child: Text(
-                            businessDetail.businessDetail.businessDisplayName,
+                               'No business',
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13.sp),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13.sp),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -226,7 +399,7 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(50.r)),
+                              BorderRadius.all(Radius.circular(50.r)),
                               border: Border.all(
                                   color: kDisabledColor, width: 1.w)),
                           child: ClipRRect(
@@ -241,13 +414,13 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                                     .businessDetail.businessLogoPath,
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Shimmer(
                                   color: Theme.of(context).disabledColor,
@@ -273,92 +446,7 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                         ),
                         InkResponse(
                           onTap: () {
-                            var bottomSheet = SelectBusinessBottomSheet(
-                                fromProduct: false,
-                                viewModel: allBusinesses,
-                                provider: context
-                                    .read<ProductsByBusinessViewModel>());
-                            bottomSheet.show();
-                          },
-                          child: Icon(
-                            Icons.arrow_drop_down,
-                            color: kPrimaryColor,
-                          ),
-                        )
-                      ] else ...[
-                        Expanded(
-                          child: Text(
-                            allBusinesses
-                                .allBusinesses.first.businessDisplayName,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12.sp),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50.r)),
-                              border: Border.all(
-                                  color: kDisabledColor, width: 1.w)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(50.r),
-                            ),
-                            child: SizedBox(
-                              height: 36.h,
-                              width: 36.h,
-                              child: CachedNetworkImage(
-                                imageUrl: allBusinesses
-                                    .allBusinesses.first.businessLogoPath,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) => Shimmer(
-                                  color: Theme.of(context).disabledColor,
-                                  duration: const Duration(seconds: 2),
-                                  enabled: true,
-                                  child: SizedBox(
-                                    height: 36.h,
-                                    width: 36.h,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => SizedBox(
-                                  child: SvgPicture.asset(
-                                    SvgAssetsPaths.imageSvg,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5.w,
-                        ),
-                        InkResponse(
-                          onTap: () {
-                            var bottomSheet = SelectBusinessBottomSheet(
-                                fromProduct: false,
-                                viewModel: allBusinesses,
-                                provider: context
-                                    .read<ProductsByBusinessViewModel>());
-                            bottomSheet.show();
+                           showSnackBarMessage(context: context, content: "No business Added");
                           },
                           child: Icon(
                             Icons.arrow_drop_down,
@@ -366,6 +454,7 @@ class OffersByBusinessScreenContents extends StatelessWidget {
                           ),
                         )
                       ],
+
                     ],
                   ),
                   SizedBox(

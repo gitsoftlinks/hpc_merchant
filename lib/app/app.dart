@@ -130,6 +130,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ChangeNotifierProvider(
             create: (_) => AllBusinessesViewModel(
                   getAllBusinesses: sl(),
+                  getCurrentUserDetails: sl(),
                   appState: sl(),
                 )),
         ChangeNotifierProvider(
