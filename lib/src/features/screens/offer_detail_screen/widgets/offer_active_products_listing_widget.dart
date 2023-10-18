@@ -20,7 +20,7 @@ class OfferActiveProductsListingWidget extends StatelessWidget {
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisSpacing: 5.w,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.8,
         mainAxisSpacing: 5.h,
         crossAxisCount: 2,
       ),
@@ -72,18 +72,21 @@ class OfferActiveProductsListingWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.h, top: 10.h),
-                  child: FittedBox(
-                    fit: BoxFit.fitHeight,
-                    child: Text(
-                      product.first.productTitle,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(fontWeight: FontWeight.w600, height: 1.1),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20.h, top: 10.h),
+                        child: Text(
+                          product.first.productTitle,
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontWeight: FontWeight.w600, height: 1.1,overflow: TextOverflow.ellipsis),maxLines: 2,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 SizedBox(
                   height: 5.h,

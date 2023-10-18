@@ -175,94 +175,93 @@ class ProductDetailsScreenContents extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 16.h, right: 16.h),
-                  child: Stack(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 8.h),
-                          child: InkResponse(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              viewModel.postDetail.productTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20.sp),
+                            ),
+                          ),
+                          InkWell(
                             onTap: () async {
+                              print('edit');
                               toNext(CreateProductScreen(
                                   data: viewModel.postDetail));
                             },
                             child: SvgPicture.asset(
                               SvgAssetsPaths.editProductSvg,
-                              height: 30.h,
+                              height: 25.h,
                             ),
                           ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            viewModel.postDetail.productTitle,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20.sp),
-                          ),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          ProductLocationListingWidget(viewModel: viewModel),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          Text(
-                            '${'AED ${viewModel.postDetail.productPrice}'.ntr()}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: kPrimaryColor),
-                          ),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          Text(
-                            'Details'.ntr(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.start,
-                          ),
-                          SizedBox(
-                            height: 3.h,
-                          ),
-                          Text(
-                            viewModel.postDetail.productDetails,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(fontWeight: FontWeight.w400),
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          Text(
-                            "Product Images".ntr(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayLarge!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 20.sp),
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          ProductImagesListing(viewModel: viewModel),
-                          SizedBox(
-                            height: 20.h,
-                          ),
                         ],
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      ProductLocationListingWidget(viewModel: viewModel),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      Text(
+                        '${'AED ${viewModel.postDetail.productPrice}'.ntr()}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: kPrimaryColor),
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      Text(
+                        'Details'.ntr(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(
+                        height: 3.h,
+                      ),
+                      Text(
+                        viewModel.postDetail.productDetails,
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Text(
+                        "Product Images".ntr(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge!
+                            .copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20.sp),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      ProductImagesListing(viewModel: viewModel),
+                      SizedBox(
+                        height: 20.h,
                       ),
                     ],
                   ),

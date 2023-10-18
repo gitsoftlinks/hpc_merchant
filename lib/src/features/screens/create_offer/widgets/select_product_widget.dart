@@ -223,13 +223,15 @@ class _SelectProductWidgetState extends State<SelectProductWidget> {
                         padding:
                             EdgeInsets.only(left: 16.h, right: 16.h, top: 16.h),
                         child: Row(children: [
-                          Text(data.product.first.productTitle,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.sp)),
+                          Expanded(
+                            child: Text(data.product.first.productTitle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18.sp)),
+                          ),
                           Spacer(),
                           Text("AED ${data.product.first.productPrice}",
                               style: Theme.of(context)
@@ -247,11 +249,14 @@ class _SelectProductWidgetState extends State<SelectProductWidget> {
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(data.product.first.productDetails,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(fontWeight: FontWeight.w400)),
+                                Expanded(
+                                  child: Text(data.product.first.productDetails,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400)),
+                                ),
                               ])),
                       SizedBox(
                         height: 10.h,
@@ -337,13 +342,15 @@ class _SelectProductWidgetState extends State<SelectProductWidget> {
                       padding:
                           EdgeInsets.only(left: 16.h, right: 16.h, top: 16.h),
                       child: Row(children: [
-                        Text(data.productTitle,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18.sp)),
+                        Expanded(
+                          child: Text(data.productTitle,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.sp)),
+                        ),
                         Spacer(),
                         Text("AED ${data.productPrice}",
                             style: Theme.of(context)
@@ -361,11 +368,13 @@ class _SelectProductWidgetState extends State<SelectProductWidget> {
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(data.productDetails,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(fontWeight: FontWeight.w400)),
+                              Expanded(
+                                child: Text(data.productDetails,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(fontWeight: FontWeight.w400)),
+                              )
                             ])),
                     SizedBox(
                       height: 10.h,

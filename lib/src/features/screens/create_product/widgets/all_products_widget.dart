@@ -41,7 +41,7 @@ class AllProducts extends StatelessWidget {
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisSpacing: 5.w,
-              childAspectRatio: 0.78,
+              childAspectRatio: 0.7,
               mainAxisSpacing: 5.h,
               crossAxisCount: 2,
             ),
@@ -86,7 +86,7 @@ class ProductItemTile extends StatelessWidget {
           borderRadius: fieldBorderRadius,
           border: Border.all(color: kBorderColor.withOpacity(0.2))),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
@@ -122,18 +122,21 @@ class ProductItemTile extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.h, top: 10.h, right: 10.h),
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: Text(
-                productData.productTitle,
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium!
-                    .copyWith(fontWeight: FontWeight.w600, height: 1.1),
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10.h, top: 10.h, right: 10.h),
+                  child: Text(
+                    productData.productTitle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(fontWeight: FontWeight.w600, height: 1.1,overflow: TextOverflow.ellipsis),maxLines: 2,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.h, top: 3.h),
@@ -164,7 +167,6 @@ class AllOffers extends StatelessWidget {
   bool? fromHome;
   @override
   Widget build(BuildContext context) {
-    //
 
     return provider.offersByBusiness.isEmpty
         ? Center(
@@ -182,7 +184,7 @@ class AllOffers extends StatelessWidget {
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisSpacing: 5.w,
-              childAspectRatio: 0.73,
+              childAspectRatio: 0.67,
               mainAxisSpacing: 5.h,
               crossAxisCount: 2,
             ),
@@ -234,6 +236,7 @@ class OffersItemTile extends StatelessWidget {
           border: Border.all(color: kBorderColor.withOpacity(0.2))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipRRect(
             borderRadius: fieldBorderRadius,
@@ -268,18 +271,21 @@ class OffersItemTile extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 10.h, top: 10.h, right: 10.h),
-            child: FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Text(
-                offerData.offerTitle,
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium!
-                    .copyWith(fontWeight: FontWeight.w600, height: 1.1),
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10.h, top: 10.h, right: 10.h),
+                  child: Text(
+                    offerData.offerTitle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayMedium!
+                        .copyWith(fontWeight: FontWeight.w600, height: 1.1,overflow: TextOverflow.ellipsis),maxLines: 2,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.h, top: 3.h),
@@ -298,7 +304,7 @@ class OffersItemTile extends StatelessWidget {
             height: 5.h,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 16.h, right: 8.h),
+            padding: EdgeInsets.only(left: 16.h, right: 8.h,bottom: 8.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,

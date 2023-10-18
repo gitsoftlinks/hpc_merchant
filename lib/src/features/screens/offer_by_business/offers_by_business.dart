@@ -62,7 +62,7 @@ class _OffersByBusinessScreenState extends State<OffersByBusinessScreen> {
             child: FloatingActionButton(
               elevation: 2,
               onPressed: () async {
-                if(context.watch<AllBusinessesViewModel>().user.hasBusiness == 1){
+                if(context.read<AllBusinessesViewModel>().user.hasBusiness == 1){
                   if (widget.id != null) {
                     await context
                         .read<OffersByBusinessViewModel>()
