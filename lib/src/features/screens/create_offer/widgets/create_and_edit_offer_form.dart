@@ -18,9 +18,6 @@ import '../../../../../app/validator/text_field_validator.dart';
 import '../../offer_detail_screen/usecases/get_offer_detail.dart';
 import 'package:intl/intl.dart';
 
-
-
-
 class CreateAndEditOfferForm extends StatefulWidget {
   OfferDetail? data;
   CreateAndEditOfferForm({super.key, required this.data});
@@ -197,6 +194,8 @@ class _CreateAndEditOfferFormState extends State<CreateAndEditOfferForm> {
                 DateFormat('yyyy-MM-dd').format(DateTime.now());
             viewModel.startDateController.text = formattedDateTime;
             final date = await showDatePickerDialog(
+             splashColor: canvasColor,
+              highlightColor: canvasColor,
               context: context,
               slidersColor: kPrimaryColor,
               leadingDateTextStyle: Theme.of(context)

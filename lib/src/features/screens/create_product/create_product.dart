@@ -118,8 +118,7 @@ class _CreateProductScreenContentsState
                           GestureDetector(
                             onTap: () async {
                               await viewModel.clearData();
-                              viewModel.createProductsFormKey.currentState!
-                                  .reset();
+
                               viewModel.isEdit = false;
 
                               Navigator.of(navigatorKeyGlobal.currentContext!)

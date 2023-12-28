@@ -19,8 +19,6 @@ import 'package:happiness_club_merchant/utils/router/models/page_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:html/dom.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../../../app/app_usecase/pick_image_from_gallery.dart';
 import '../../../../../../app/models/places_obj.dart';
@@ -221,7 +219,7 @@ class CreateBusinessViewModel extends ChangeNotifier {
       }
       isEdit = true;
       businessId = businessData.id;
-      businessNameController.text = businessData.businessDisplayName ?? '';
+      businessNameController.text = businessData.branchName ?? '';
       editCity = businessData.businessCity;
       editLat = businessData.businessLat;
       editLng = businessData.businessLng;

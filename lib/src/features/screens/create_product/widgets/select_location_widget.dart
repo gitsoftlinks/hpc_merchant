@@ -84,7 +84,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                                 .bodyLarge!
                                 .copyWith(color: inputFieldBorderColor)),
                         borderRadius: fieldBorderRadius,
-                        value: value != null ? value.cityName : null,
+                        value: value != null ? value.branchName : null,
                         onChanged: (val) {
                           widget.viewModel.changeSelectedLocation(val!);
                         },
@@ -92,7 +92,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                             widget.viewModel.businessLocations.map((valueItem) {
                           return DropdownMenuItem<String>(
                             alignment: Alignment.centerLeft,
-                            value: valueItem.cityName,
+                            value: valueItem.branchName,
                             onTap: () =>
                                 widget.viewModel.categoryId = valueItem.id,
                             child: Text(
@@ -139,7 +139,6 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                               BorderRadius.all(Radius.circular(10.r))),
                       child: Checkbox(
                         value: widget.viewModel.isQuantity,
-
                         side: BorderSide.none,
                         fillColor: MaterialStatePropertyAll(canvasColor),
                         checkColor: kPrimaryColor,

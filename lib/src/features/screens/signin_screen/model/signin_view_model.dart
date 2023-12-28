@@ -135,7 +135,7 @@ class SignInViewModel extends ChangeNotifier {
 
   void moveToSignUpScreen() {
     _appState.currentAction =
-        PageAction(state: PageState.addPage, page: SignUpScreenConfig);
+        PageAction(state: PageState.replace, page: SignUpScreenConfig);
   }
 
   Future<bool> sendForgetPasswordOtp() async {

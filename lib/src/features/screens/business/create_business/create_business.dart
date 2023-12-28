@@ -8,7 +8,6 @@ import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:happiness_club_merchant/app/custom_widgets/custom_snackbar.dart';
 import 'package:happiness_club_merchant/src/features/screens/business/create_business/business_contract.dart';
-import 'package:happiness_club_merchant/src/features/screens/business/create_business/widgets/business_contract_pop_up.dart';
 import 'package:happiness_club_merchant/utils/extensions/extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -1169,14 +1168,14 @@ class _CreateBusinessScreenContentsState
                   provider.validateTextFieldsNotEmpty();
                 },
                 onTap: () async {
-                  setState(() {
-                    focus.requestFocus();
-                  });
+                  // setState(() {
+                  //   focus.requestFocus();
+                  // });
                 },
                 onFieldSubmitted: (val){
-                  setState(() {
-                    focus.unfocus();
-                  });
+                  // setState(() {
+                  //   focus.unfocus();
+                  // });
                 },
                 validator: TextFieldValidator.validateText,
               ),

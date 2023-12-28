@@ -13,6 +13,7 @@ showBranchesAlert(context) {
       builder: (context) {
         var model = context.read<BusinessDetailViewModel>();
         return AlertDialog(
+          backgroundColor: canvasColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(

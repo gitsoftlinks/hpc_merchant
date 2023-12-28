@@ -20,7 +20,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_manager/photo_manager.dart';
 import '../../../../../app/app_theme/app_theme.dart';
 import '../../../../../app/app_usecase/pick_multi_images_from_gallery.dart';
 import '../../../../../app/custom_widgets/custom_snackbar.dart';
@@ -98,9 +97,7 @@ class CreateProductViewModel extends ChangeNotifier {
   Future init(id, data) async {
     isLoading = true;
     notifyListeners();
-    if (createProductsFormKey.currentState != null) {
-      createProductsFormKey.currentState!.reset();
-    }
+
     await clearData();
     businessLocations = await getBusinessLocations(id);
 
@@ -177,11 +174,11 @@ class CreateProductViewModel extends ChangeNotifier {
 
   void changeSelectedLocation(String newValue) async {
     if (selectedLocation.value != null &&
-        selectedLocation.value!.cityName == newValue) {
+        selectedLocation.value!.branchName == newValue) {
       return;
     }
     selectedLocation.value = businessLocations
-        .where((element) => element.cityName == newValue)
+        .where((element) => element.branchName == newValue)
         .first;
 
     notifyListeners();

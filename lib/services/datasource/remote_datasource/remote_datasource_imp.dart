@@ -404,13 +404,11 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<UserDetailResponse> sendLogin(SendLoginParams params) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/auth/login';
+    var api = 'https://hpcapi-merchant.happinessclub.ae/public/api/auth/login';
 
     var formData = FormData.fromMap(params.toJson());
 
     try {
-      //
-
       final response = await _dio.post(api, data: formData);
 
       _log.i('[remote data source : sendLogin] $response');
@@ -430,7 +428,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<UserDetailResponse> getCurrentUserDetails(String accessToken) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/user-profile';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/user-profile';
 
     _dio.options.headers = {
       'authorization': 'Bearer $accessToken',
@@ -445,8 +444,6 @@ class RemoteDataSourceImp extends RemoteDataSource {
       _log.i('[remote data source : getCurrentUserDetails] $response');
 
       return UserDetailResponse.fromJson(response.data);
-
-      //
     } on DioError catch (dioError) {
       if (dioError.response == null) {
         throw SOMETHING_WENT_WRONG;
@@ -472,7 +469,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<UserRegistrationResponse> registerUser(
       RegisterUserParams params) async {
-    var api = "https://hpcstaging.happinessclub.ae/api/auth/register";
+    var api =
+        "https://hpcapi-merchant.happinessclub.ae/public/api/auth/register";
     _dio.options.headers = {'Content-Type': 'multipart/form-data'};
 
     try {
@@ -495,7 +493,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
   }
 
   Future<bool> updatePersonalInfo(UpdatePersonalInfoParams params) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/user-profile-update';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/user-profile-update';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -618,7 +617,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<bool> createNewBusiness(CreateNewBusinessParams params) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/create/business';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/create/business';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -646,7 +646,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<bool> updateBusiness(UpdateBusiness params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/edit/business/${params.id}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/edit/business/${params.id}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -674,7 +674,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<GetBusinessCategoriesResponse> getBusinessCategories(
       accessToken) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/business-categories';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/business-categories';
     _dio.options.headers = {
       'authorization': 'Bearer ${accessToken}',
       'accept': 'application/json',
@@ -699,7 +700,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<GetAllBusinessesResponse> getAllBusinesses(String accessToken) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/user/all_business';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/user/all_business';
     _dio.options.headers = {
       'authorization': 'Bearer $accessToken',
       'accept': 'application/json',
@@ -726,7 +728,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetBusinessDetailResponse> getBusinessDetail(
       GetBusinessDetailParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/business-detail/${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/business-detail/${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -756,7 +758,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<bool> addBusinessProduct(AddBusinessProductParams params) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/create/product';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/create/product';
 
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
@@ -791,7 +794,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetAllProductsResponse> getAllProducts(
       GetAllProductsParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/products-by-business?business_id=${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/products-by-business?business_id=${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -819,7 +822,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetProductDetailResponse> getProductDetail(
       GetProductDetailParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/product-detail?product_id=${params.productId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/product-detail?product_id=${params.productId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -894,7 +897,8 @@ class RemoteDataSourceImp extends RemoteDataSource {
 
   @override
   Future<bool> createOffer(CreateOfferParams params) async {
-    var api = 'https://hpcstaging.happinessclub.ae/api/create/offer';
+    var api =
+        'https://hpcapi-merchant.happinessclub.ae/public/api/create/offer';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1049,7 +1053,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<bool> updateProduct(EditProductParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/edit/product/${params.id}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/edit/product/${params.id}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1084,7 +1088,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetBusinessLocationsResponse> getBusinessLocations(
       GetBusinessLocationParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/locations-by-business?business_id=${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/locations-by-business?business_id=${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1116,7 +1120,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetProductByBusinessResponse> getProductsByBusiness(
       GetProductByBusinessParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/products-by-business?business_id=${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/products-by-business?business_id=${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1148,7 +1152,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetAllOffersByBusinessResponse> getOffersByBusiness(
       GetAllOffersByBusinessParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/all-offers-by-business?business_id=${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/all-offers-by-business?business_id=${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1175,7 +1179,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<bool> updateBusinessCover(UpdateNewBusinessCoverParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/update/business/cover-pic';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/update/business/cover-pic';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1204,7 +1208,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetOfferDetailResponse> getOfferDetail(
       GetOfferDetailParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/offer-detail?offer_id=${params.offerId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/offer-detail?offer_id=${params.offerId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1231,7 +1235,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<bool> deleteProductAttachments(
       DeleteProductAttachmentsParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/delete-product-attachment?attachment_id=${params.attachmentId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/delete-product-attachment?attachment_id=${params.attachmentId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1258,7 +1262,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<bool> deleteProductLocationAttachments(
       DeleteProductLocationAttachmentsParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/delete-product-location?location_id=${params.attachmentId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/delete-product-location?location_id=${params.attachmentId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1287,7 +1291,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<bool> deleteProductOfferAttachments(
       DeleteProductOfferAttachmentsParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/delete-product-offer?product_offer_id=${params.attachmentId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/delete-product-offer?product_offer_id=${params.attachmentId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1314,7 +1318,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   @override
   Future<bool> updateOffer(EditsProductOfferParams offerParams) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/edit/offer/${offerParams.id}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/edit/offer/${offerParams.id}';
     _dio.options.headers = {
       'authorization': 'Bearer ${offerParams.accessToken}',
       'accept': 'application/json',
@@ -1349,7 +1353,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<bool> deleteBranchLocation(
       DeleteBranchLocationAttachmentsParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/business-location-delete?location_id=${params.attachmentId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/business-location-delete?location_id=${params.attachmentId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1378,7 +1382,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetBusinessContractResponse> getBusinessContract(
       GetBusinessContractParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/contract-content?business_legal_name=${params.businessLegalName}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/contract-content?business_legal_name=${params.businessLegalName}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',
@@ -1410,7 +1414,7 @@ class RemoteDataSourceImp extends RemoteDataSource {
   Future<GetBusinessContractDownloadResponse> getBusinessContractDownload(
       GetBusinessContractDownloadParams params) async {
     var api =
-        'https://hpcstaging.happinessclub.ae/api/contract-download/${params.businessId}';
+        'https://hpcapi-merchant.happinessclub.ae/public/api/contract-download/${params.businessId}';
     _dio.options.headers = {
       'authorization': 'Bearer ${params.accessToken}',
       'accept': 'application/json',

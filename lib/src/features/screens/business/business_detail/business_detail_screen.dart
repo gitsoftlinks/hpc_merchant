@@ -163,10 +163,12 @@ class BusinessDetailScreenContents extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 0.16.sh - 50.h),
-                      child: SizedBox(
+                      child: Container(
+                        color: canvasColor,
                         height: 185.h,
                         width: MediaQuery.of(context).size.width.w,
                         child: Card(
+                          surfaceTintColor: canvasColor,
                           margin: EdgeInsets.symmetric(
                               horizontal: 16.w, vertical: 16.h),
                           shape: RoundedRectangleBorder(

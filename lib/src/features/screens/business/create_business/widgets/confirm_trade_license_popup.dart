@@ -15,6 +15,7 @@ showConfirmTradeLicenseAlert(context, CreateBusinessViewModel provider) {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: canvasColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(

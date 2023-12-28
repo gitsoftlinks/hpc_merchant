@@ -113,7 +113,7 @@ class _PersonalInfoScreenContentsState
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Personel Info".ntr(),
+                      "Personal Info".ntr(),
                       style: Theme.of(context)
                           .textTheme
                           .displayLarge!

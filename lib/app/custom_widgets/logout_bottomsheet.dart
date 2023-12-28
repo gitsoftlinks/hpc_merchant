@@ -36,7 +36,7 @@ class LogoutBottomSheet {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5.h, bottom: 20.h),
-                  child: Text('logout_message'.ntr(),
+                  child: Text('are you sure to logout?'.ntr(),
                       style: Theme.of(navigatorKeyGlobal.currentContext!)
                           .textTheme
                           .headline5!
