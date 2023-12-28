@@ -65,6 +65,7 @@ class _BusinessContractScreenState extends State<BusinessContractScreen> {
                         left: 8.w,
                       ),
                       child: ContinueButton(
+                        loadingNotifier: viewModel.isLoadingNotifier,
                         backgroundColor:
                             Theme.of(navigatorKeyGlobal.currentContext!)
                                 .primaryColor,

@@ -654,6 +654,8 @@ class CreateBusinessViewModel extends ChangeNotifier {
   }
 
   createNewBusiness({required CreateNewBusinessParams params}) async {
+    isLoadingNotifier.value = true;
+    notifyListeners();
     var createBusinessEither = await _createNewBusiness.call(params);
 
     if (createBusinessEither.isLeft()) {
@@ -675,6 +677,8 @@ class CreateBusinessViewModel extends ChangeNotifier {
     createBusinessFormKey.currentState?.reset();
 
     clearData();
+    isLoadingNotifier.value = false;
+    notifyListeners();
   }
 
   getBusinessCategory() async {
