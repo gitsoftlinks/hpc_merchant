@@ -204,7 +204,7 @@ class _CreateAndEditOfferFormState extends State<CreateAndEditOfferForm> {
                   .copyWith(fontWeight: FontWeight.w600, color: kPrimaryColor),
               initialDate: DateTime.now(),
               minDate: DateTime(1900),
-              maxDate: DateTime(2023, 12, 31),
+              maxDate: DateTime(3000),
               enabledCellDecoration: BoxDecoration(color: canvasColor),
               selectedCellDecoration: BoxDecoration(
                   color: kPrimaryColor,
